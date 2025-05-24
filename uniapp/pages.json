@@ -1,0 +1,38 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index"
+		},
+		{
+			"path": "pages/settings/settings"
+		},
+		{
+			"path": "pages/jot/jot"
+		}
+	],
+	"globalStyle": {
+		"navigationStyle": "custom",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/jot/jot",
+				"text": "备忘"
+			},
+			{
+				"pagePath": "pages/settings/settings",
+				"text": "设置"
+			}
+		]
+	}
+}
