@@ -1,0 +1,34 @@
+package ${package.Entity};
+
+#foreach($pkg in ${importEntityJavaPackages})
+import ${pkg};
+#end
+
+import cn.fudges.server.common.request.RequestEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+*
+* @author ${author}
+* @since ${date}
+*/
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ${entity}Request extends RequestEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+
+#if("$!field.comment" != "")
+#if(${entityFieldUseJavaDoc})
+    /**
+     * ${field.comment}
+     */
+#end
+#end
+    private ${field.propertyType} ${field.propertyName};
+#end
+## ----------  END 字段循环遍历  ----------
+}
