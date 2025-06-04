@@ -1,5 +1,6 @@
 package cn.fudges.server.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.fudges.server.common.result.ResultResponse;
 import cn.fudges.server.request.JotRecordRequest;
 import cn.fudges.server.response.JotRecordResponse;
@@ -42,5 +43,10 @@ public class JotRecordController {
     @PostMapping("/delete/{id}")
     public ResultResponse<Boolean> delete(@PathVariable String id) {
         return ResultResponse.success(jotRecordService.delete(id));
+    }
+
+    @PostMapping("/delay")
+    public ResultResponse<Boolean> delay(@RequestBody JotRecordRequest request) {
+        return ResultResponse.success(jotRecordService.delay(request));
     }
 }

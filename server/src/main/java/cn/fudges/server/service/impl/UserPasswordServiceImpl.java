@@ -40,7 +40,7 @@ public class UserPasswordServiceImpl extends ServiceImpl<UserPasswordMapper, Use
         LambdaQueryWrapper<UserBase> userQuery = new LambdaQueryWrapper<>();
         userQuery.eq(UserBase::getMobilePhone, request.getMobilePhone()).eq(UserBase::getIsRemove, 0);
         UserBase userBase = userBaseService.getOne(userQuery);
-        AssertUtils.isNotNull(userBase, ResultCodeEnum.PARAM_ERROR);
+        AssertUtils.isNotNull(userBase, ResultCodeEnum.PARAM_ERROR, "用户名或密码错误！");
 
         LambdaQueryWrapper<UserPassword> passwordQuery = new LambdaQueryWrapper<>();
         passwordQuery.eq(UserPassword::getUserId, userBase.getId());

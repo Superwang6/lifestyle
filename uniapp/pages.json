@@ -1,13 +1,19 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
+		{
+			"path": "pages/jot/jot"
+		},
 		{
 			"path": "pages/index/index"
 		},
 		{
-			"path": "pages/settings/settings"
+			"path" : "pages/mine/mine"
 		},
 		{
-			"path": "pages/jot/jot"
+			"path" : "pages/login/login"
+		},
+		{
+			"path": "pages/jot/jot-add"
 		}
 	],
 	"globalStyle": {
@@ -30,8 +36,8 @@
 				"text": "备忘"
 			},
 			{
-				"pagePath": "pages/settings/settings",
-				"text": "设置"
+				"pagePath": "pages/mine/mine",
+				"text": "我的"
 			}
 		]
 	}

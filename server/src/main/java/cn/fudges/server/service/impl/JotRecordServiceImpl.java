@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,23 +27,15 @@ import java.util.Map;
  * @since 2025-05-23
  */
 @Service
+@RequiredArgsConstructor
 public class JotRecordServiceImpl extends ServiceImpl<JotRecordMapper, JotRecord> implements JotRecordService {
 
-    @Override
-    public void checkJotClassifyHasRecord(Long classifyId) {
-        LambdaQueryWrapper<JotRecord> recordQuery = new LambdaQueryWrapper<>();
-        recordQuery.eq(JotRecord::getClassifyId, classifyId);
-        JotRecord record = getOne(recordQuery);
-        AssertUtils.isNull(record, ResultCodeEnum.BUSINESS_EXCEPTION, "存在备忘记录");
-    }
+    private final JotRecordMapper jotRecordMapper;
 
     @Override
     public IPage<JotRecord> queryPage(JotRecordRequest request) {
-        Map<String, Object> map = BeanUtil.beanToMap(request, true,true);
-
-        QueryWrapper<JotRecord> recordQuery = new QueryWrapper<>();
-        recordQuery.allEq(map);
-        return page(request.getPage(), recordQuery);
+        request.setUserId(StpUtil.getLoginIdAsLong());
+        return jotRecordMapper.queryPageList(request.getPage(), request);
     }
 
     @Override
@@ -82,5 +75,23 @@ public class JotRecordServiceImpl extends ServiceImpl<JotRecordMapper, JotRecord
         AssertUtils.isNotNull(record, ResultCodeEnum.BUSINESS_EXCEPTION);
         AssertUtils.isTrue(record.getUserId().equals(StpUtil.getLoginIdAsLong()), ResultCodeEnum.PERMISSION_DENIED);
         return removeById(id);
+    }
+
+    @Override
+    public Boolean delay(JotRecordRequest request) {
+        AssertUtils.isNotNull(request, ResultCodeEnum.PARAM_ERROR);
+        AssertUtils.isNotNull(request.getId(), ResultCodeEnum.PARAM_ERROR);
+        AssertUtils.isNotNull(request.getDelayDays(), ResultCodeEnum.PARAM_ERROR);
+
+        JotRecord record = getById(request.getId());
+        AssertUtils.isNotNull(record, ResultCodeEnum.BUSINESS_EXCEPTION);
+        AssertUtils.isTrue(record.getUserId().equals(StpUtil.getLoginIdAsLong()), ResultCodeEnum.PERMISSION_DENIED);
+
+        LocalDateTime newRemindTime = record.getRemindTime().plusDays(request.getDelayDays());
+        JotRecord modifyRecord = new JotRecord();
+        modifyRecord.setId(request.getId());
+        modifyRecord.setRemindTime(newRemindTime);
+        modifyRecord.setModifyTime(LocalDateTime.now());
+        return updateById(modifyRecord);
     }
 }

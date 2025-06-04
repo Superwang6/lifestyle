@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SaTokenException.class)
     public ResultResponse<Void> handleBizException(SaTokenException e) {
         ResultCodeEnum resultEnum = ResultCodeEnum.BUSINESS_EXCEPTION;
-        List<Integer> noLoginCodes = List.of(11012, 11013);
+        List<Integer> noLoginCodes = List.of(11011, 11012, 11013);
         if(noLoginCodes.contains(e.getCode())) {
             resultEnum = ResultCodeEnum.NO_LOGIN;
         }

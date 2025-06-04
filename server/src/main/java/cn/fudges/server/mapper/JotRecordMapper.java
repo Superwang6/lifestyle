@@ -1,7 +1,11 @@
 package cn.fudges.server.mapper;
 
 import cn.fudges.server.entity.JotRecord;
+import cn.fudges.server.request.JotRecordRequest;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface JotRecordMapper extends BaseMapper<JotRecord> {
 
+    IPage<JotRecord> queryPageList(IPage<JotRecord> page, @Param("request") JotRecordRequest request);
 }

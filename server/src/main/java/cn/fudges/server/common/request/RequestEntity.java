@@ -25,6 +25,8 @@ public class RequestEntity implements Serializable {
 
     private LocalDateTime endTime;
 
+    private String search;
+
     public <T> IPage<T> getPage() {
         AssertUtils.isTrue(ObjectUtil.isNotNull(this.pageNum) && ObjectUtil.isNotNull(this.pageSize), ResultCodeEnum.PARAM_ERROR, "分页参数不能为空");
         return new Page<T>(this.pageNum, this.pageSize);
@@ -52,5 +54,13 @@ public class RequestEntity implements Serializable {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

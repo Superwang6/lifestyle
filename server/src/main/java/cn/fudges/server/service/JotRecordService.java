@@ -16,8 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface JotRecordService extends IService<JotRecord> {
 
-    void checkJotClassifyHasRecord(Long classifyId);
-
     IPage<JotRecord> queryPage(JotRecordRequest request);
 
     Boolean addJotRecord(JotRecordRequest request);
@@ -25,4 +23,6 @@ public interface JotRecordService extends IService<JotRecord> {
     Boolean modifyJotRecord(JotRecordRequest request);
 
     Boolean delete(String id);
+
+    Boolean delay(JotRecordRequest request);
 }

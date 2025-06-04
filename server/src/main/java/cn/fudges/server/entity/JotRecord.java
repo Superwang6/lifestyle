@@ -79,4 +79,10 @@ public class JotRecord implements Serializable {
      */
     @TableField("modify_time")
     private LocalDateTime modifyTime;
+
+    @TableField(exist = false)
+    private String classifyName;
+    
+    @TableField(exist = false)
+    private String bookName;
 }
