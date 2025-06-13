@@ -13,6 +13,11 @@ export function post(url, req, successCallback, failCallback, completeCallback) 
 			if(res.statusCode == 200) {
 				if(res.data.code == "00000") {
 					successCallback(res.data)
+				} else if (res.data.code == "1001") {
+					//未登录，跳登录页
+					uni.navigateTo({
+						url: '/pages/login/login'
+					})
 				} else {
 					if(failCallback) {
 						failCallback(res.data)
@@ -20,7 +25,7 @@ export function post(url, req, successCallback, failCallback, completeCallback) 
 						console.log("failCallback:" + JSON.stringify(res.data));
 						uni.showToast({
 							icon: "none",
-							title: '请求失败！'
+							title: res.data.message
 						})
 					}
 				}
