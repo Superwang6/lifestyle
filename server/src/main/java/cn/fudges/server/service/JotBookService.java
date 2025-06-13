@@ -20,4 +20,6 @@ public interface JotBookService extends IService<JotBook> {
     IPage<JotBook> queryPage(JotBookRequest request);
 
     Boolean addJotBook(JotBookRequest request);
+
+    Boolean modifyJotBook(JotBookRequest request);
 }

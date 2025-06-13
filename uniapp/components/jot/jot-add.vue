@@ -82,7 +82,6 @@
 		post('/jotClassify/page', request, (data) => {
 			classifyList.value = []
 			classifyList.value.push(...data.data)
-			console.log(classifyList.value);
 		})
 	}
 	const addJot = () => {

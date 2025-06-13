@@ -26,4 +26,6 @@ public class UserLoginResponse implements Serializable {
     private String mobilePhone;
 
     private Integer passwordLength;
+
+    private String token;
 }

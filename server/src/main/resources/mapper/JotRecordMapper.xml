@@ -50,5 +50,6 @@
             <if test="request.status != null">
                 AND jr.status = #{request.status}
             </if>
+        ORDER BY jr.create_time desc, jr.id desc
     </select>
 </mapper>

@@ -9,10 +9,15 @@ import cn.fudges.server.service.JotClassifyService;
 import cn.fudges.server.service.JotRecordService;
 import cn.fudges.server.utils.AssertUtils;
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -30,7 +35,13 @@ public class JotClassifyServiceImpl extends ServiceImpl<JotClassifyMapper, JotCl
 
     @Override
     public IPage<JotClassify> queryPage(JotClassifyRequest request) {
-        return page(request.getPage());
+        AssertUtils.isNotNull(request, ResultCodeEnum.PARAM_ERROR);
+        request.setUserId(StpUtil.getLoginIdAsLong());
+
+        QueryWrapper<JotClassify> wrapper = new QueryWrapper<>();
+        Map<String, Object> map = BeanUtil.beanToMap(request, true, true);
+        wrapper.allEq(map);
+        return page(request.getPage(), wrapper);
     }
 
     @Override
@@ -39,6 +50,11 @@ public class JotClassifyServiceImpl extends ServiceImpl<JotClassifyMapper, JotCl
         AssertUtils.isNotNull(request.getBookId(), ResultCodeEnum.PARAM_ERROR);
 
         request.setUserId(StpUtil.getLoginIdAsLong());
+
+        LambdaQueryWrapper<JotClassify> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(JotClassify::getBookId, request.getBookId()).eq(JotClassify::getUserId, request.getUserId());
+        long count = count(wrapper);
+        AssertUtils.isTrue(count <= 10 , ResultCodeEnum.BUSINESS_EXCEPTION, "一个备忘录最多10个分类");
         return save(BeanUtil.copyProperties(request, JotClassify.class));
     }
 

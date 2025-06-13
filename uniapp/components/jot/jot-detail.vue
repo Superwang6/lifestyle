@@ -1,26 +1,28 @@
 <template>
-	<uni-drawer ref="draw" mode="right">
-		<view class="detail">
-			<view class="draw-title">详情</view>
-			<view class="uni-body">
-				<view class="top">
-					<view class="title">
-						{{ detailItem.title }}
-					</view>
-					<view class="status">
-						{{ detailItem.status == 0 ? "待处理" : (detailItem.status == 1 ? "已处理" : "已忽略") }}
-					</view>
+	<ls-drawer ref="draw" mode="right">
+		<template #header>
+			详情
+		</template>
+		<view class="uni-body">
+			<view class="top">
+				<view class="title">
+					{{ detailItem.title }}
 				</view>
-				<view class="time">
-					{{ detailItem.remindTime }}
-				</view>
-				<view class="des">
-					{{ detailItem.description }}
-				</view>
-				<view class="classify">
-					{{ detailItem.classifyName }}
+				<view class="status">
+					{{ detailItem.status == 0 ? "待处理" : (detailItem.status == 1 ? "已处理" : "已忽略") }}
 				</view>
 			</view>
+			<view class="time">
+				{{ detailItem.remindTime }}
+			</view>
+			<view class="des">
+				{{ detailItem.description }}
+			</view>
+			<view class="classify">
+				{{ detailItem.classifyName }}
+			</view>
+		</view>
+		<template #bottom>
 			<view class="card-actions">
 				<view class="card-actions-item" @click="delay()">
 					<uni-icons type="arrow-left" size="25" color="#999"></uni-icons>
@@ -35,13 +37,14 @@
 					<text class="card-actions-item-text">完成</text>
 				</view>
 			</view>
-		</view>
-	</uni-drawer>
+		</template>
+	</ls-drawer>
 </template>
 
 <script setup>
 	import {ref} from 'vue'
 	import {post} from '@/utils/request.js'
+	import lsDrawer from '@/components/common/ls-drawer.vue'
 	
 	const emits = defineEmits(['refreshIndex'])
 	const detailItem = ref(null)
@@ -83,71 +86,67 @@
 </script>
 
 <style lang="scss" scoped>
-	.detail {
-		height: 100vh;
+	.uni-body {
+		flex: 1;
 		display: flex;
 		flex-direction: column;
-		margin: 0 10px 0 10px;
 		
-		.draw-title {
-			margin-top: 10px;
-		}
-		
-		.uni-body {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			
-			.top {
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				justify-content: space-between;
-				
-				.title {
-					font-size: 20px;
-					font-weight: bold;
-					margin: 10px 0px 10px 0px;
-				}
-				.status {
-					font-size: 8px;
-				}
-			}
-			
-			.time {
-				font-size: 10px;
-				color: lightgray
-			}
-			.des {
-				margin-top: 20px;
-				font-size: 15px;
-				background-color: #EAF1F5;
-				border-radius: 10px;
-				padding: 10px;
-				min-height: 30vh;
-			}
-			.classify {
-				margin-top: 10px;
-				border-radius: 25px;
-				padding: 5px 20px 5px 20px;
-				background-color: lightblue;
-				font-size: 10px;
-				
-				align-self: flex-start;
-				width: auto;
-			}
-		}
-		
-		.card-actions {
-			margin-bottom: 10px;
+		.top {
 			display: flex;
 			flex-direction: row;
-			justify-content: space-around;
+			align-items: center;
+			justify-content: space-between;
 			
-			.card-actions-item {
-				display: flex;
-				flex-direction: column;
+			.title {
+				width: 80%;
+				font-size: 20px;
+				font-weight: bold;
+				margin: 10px 0px 10px 0px;
+				
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				display: block;
 			}
+			.status {
+				font-size: 8px;
+			}
+		}
+		
+		.time {
+			font-size: 10px;
+			color: lightgray
+		}
+		.des {
+			margin-top: 20px;
+			font-size: 15px;
+			background-color: #EAF1F5;
+			border-radius: 10px;
+			padding: 10px;
+			min-height: 30vh;
+			white-space: normal;
+			word-break: break-all;
+		}
+		.classify {
+			margin-top: 10px;
+			border-radius: 25px;
+			padding: 5px 20px 5px 20px;
+			background-color: lightblue;
+			font-size: 10px;
+			
+			align-self: flex-start;
+			width: auto;
+		}
+	}
+	
+	.card-actions {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		
+		.card-actions-item {
+			display: flex;
+			flex-direction: column;
 		}
 	}
 </style>

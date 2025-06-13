@@ -1,84 +1,128 @@
 <template>
 	<view class="main-container">
-		<z-paging ref="paging" v-model="list" @query="queryList">
+		<z-paging ref="paging" v-model="list" @query="queryList" :default-page-size="30">
 			<template #top>
-				<uni-nav-bar title="备忘录" :border="false" :fixed="true" />
-				<uni-search-bar v-model="searchText" @cancel="cancel" radius="20" bgColor="#F0F1F2" placeholder="搜索">
+				<uni-nav-bar title="备忘录" :border="false" :fixed="true" right-icon="more-filled" @clickRight="moreClick()" left-icon="wallet" @clickLeft="openHome()"/>
+				<uni-search-bar v-model="request.search" @confirm="searchQueryList()" @cancel="cancel" radius="20" bgColor="#F0F1F2" placeholder="搜索">
 				</uni-search-bar>
 			</template>
-			<view class="item" v-for="(item,index) in list" :key="index">
-				<view class="item-left">
-					<view class="left-top">{{item.title}}</view>
-					<view class="left-bottom">{{item.description}}</view>
-				</view>
-				<view class="item-right">
-					<view class="right-top">{{ item.status == 0 ? '待处理': (item.status == 1 ? '已处理' : '已忽略') }}</view>
-					<view class="right-bottom">{{item.remindTime}}</view>
-				</view>
-			</view>
-			<uni-fab horizontal="right" vertical="bottom" :pop-menu="false" @click="addJot()"></uni-fab>
-			<jot-detail @refreshIndex="refreshIndex()" ref="detail"></jot-detail>
+			<uni-swipe-action ref="swiper">
+				<template v-for="(item,index) in list" :key="index">
+					<uni-swipe-action-item :right-options="options" @click="swipeClick($event, item)" :threshold="0">
+						<view class="item" @click="detailClick(item)">
+							<view class="item-left">
+								<view class="left-top">{{item.title}}</view>
+								<view class="left-bottom">{{item.description}}</view>
+							</view>
+							<view class="item-right">
+								<view class="right-top">
+									{{ item.status == 0 ? '待处理': (item.status == 1 ? '已处理' : '已忽略') }}
+								</view>
+								<view class="right-bottom">{{item.remindTime}}</view>
+							</view>
+						</view>
+					</uni-swipe-action-item>
+				</template>
+			</uni-swipe-action>
 		</z-paging>
+		<jot-detail ref="detail" @refreshIndex="refreshIndex()"></jot-detail>
+		<jot-more ref="more" @filterParam="filterParam"></jot-more>
+		<jot-home ref="home"></jot-home>
+		<uni-fab horizontal="right" vertical="bottom" :pop-menu="false" @click="addJot()"></uni-fab>
 	</view>
 </template>
 
 <script setup>
+	import { onShow } from '@dcloudio/uni-app'
 	import {
 		onActivated,
 		onMounted,
-		ref
+		ref,
+		reactive
 	} from 'vue';
 	import JotDetail from '@/components/jot/jot-detail.vue'
+	import JotMore from '@/components/jot/jot-more.vue';
+	import JotHome from '@/components/jot/jot-home.vue';
 	import {
 		post
 	} from '@/utils/request.js';
 
+	const request = ref({
+		'status': 0
+	})
 	const searchText = ref("")
 	const list = ref([])
-	const refreshIndex = () => {
-		list.value = []
-		const request = {
-			"pageNum": 1,
-			"pageSize": 30
-		}
-		post('/jotRecord/page', request, (data) => {
-			list.value.push(...data.data)
-		})
-	}
-	
 	const paging = ref(null)
 	const queryList = (pageNum, pageSize) => {
-		console.log(pageNum,pageSize);
-		const request = {
-			"pageNum": pageNum,
-			"pageSize": pageSize
-		}
-		post('/jotRecord/page', request, (data) => {
+		request.value.pageNum = pageNum
+		request.value.pageSize = pageSize
+		post('/jotRecord/page', request.value, (data) => {
 			paging.value.complete(data.data);
 		}, () => {
 			paging.value.complete(false);
 		})
 	}
+	const searchQueryList = () => {
+		queryList(1, 30)
+	}
+	const filterParam = (param) => {
+		request.value.bookId = param.bookId
+		request.value.status = param.status
+		request.value.classifyId = param.classifyId
+		paging.value.reload()
+	}
+	const refreshIndex = () => {
+		paging.value.refresh()
+	}
 	const cancel = () => {
-		searchText.value = ""
+		request.value.search = null
+		queryList(1, 30)
+	}
+	const more = ref(null)
+	const moreClick = () => {
+		more.value.openMore()
 	}
 
 	const detail = ref(null)
-	const detailClick = (index) => {
-		const item = list.value[index]
-		console.log(item);
+	const detailClick = (item) => {
 		detail.value.openDetail(item)
 	}
 
 	const jotAdd = ref(null)
 	const addJot = () => {
 		uni.navigateTo({
-			url: '/pages/jot/jot-add'
+			url: '/pages/jot/jot-add?mode=0&bookId=' + request.value.bookId
 		})
 	}
 
-	onActivated(() => {
-		refreshIndex()
+	const swiper = ref(null)
+	const options = ref([{
+		text: '编辑',
+		style: {
+			backgroundColor: '#007aff'
+		}
+	}])
+	const swipeClick = (e, item) => {
+		uni.navigateTo({
+			url: '/pages/jot/jot-add?mode=1&item=' + encodeURIComponent(JSON.stringify(item))
+		})
+		swiper.value.closeAll()
+	}
+	
+	const home = ref(null)
+	const openHome = () => {
+		home.value.openHome()
+	}
+	onShow(() => {
+		uni.$on('jot-update', () => {
+			refreshIndex()
+		})
+	})
+	onMounted(() => {
+		const req = uni.getStorageSync('jot_more_filter')
+		if (req) {
+			request.value = req
+		}
 	})
 </script>
 
@@ -89,7 +133,7 @@
 
 	.main-container {
 		height: 100%;
-		
+
 		.item {
 			padding: 5px 15px 5px 15px;
 			display: flex;
@@ -97,10 +141,10 @@
 			justify-content: space-between;
 			align-items: center;
 			color: #333333;
-			
+
 			.item-left {
 				width: 55vw;
-				
+
 				.left-top {
 					font-size: 18px;
 					width: 50vw;
@@ -109,6 +153,7 @@
 					text-overflow: ellipsis;
 					display: block;
 				}
+
 				.left-bottom {
 					font-size: 10px;
 					color: gray;
@@ -119,15 +164,17 @@
 					display: block;
 				}
 			}
+
 			.item-right {
 				display: flex;
 				flex-direction: column;
 				align-items: flex-end;
 				justify-content: space-between;
-				
+
 				.right-top {
 					font-size: 10px
 				}
+
 				.right-bottom {
 					font-size: 8px;
 					color: lightgray;
@@ -136,5 +183,4 @@
 		}
 
 	}
-	
 </style>

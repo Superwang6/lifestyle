@@ -29,13 +29,17 @@ public class JotBookController {
 
     @PostMapping("/page")
     public ResultResponse<List<JotBookResponse>> queryPage(@RequestBody JotBookRequest request) {
-
         return ResultResponse.success(jotBookService.queryPage(request), JotBookResponse.class);
     }
 
     @PostMapping("/add")
     public ResultResponse<Boolean> addJotBook(@RequestBody JotBookRequest request) {
         return ResultResponse.success(jotBookService.addJotBook(request));
+    }
+
+    @PostMapping("/modify")
+    public ResultResponse<Boolean> modifyJotBook(@RequestBody JotBookRequest request) {
+        return ResultResponse.success(jotBookService.modifyJotBook(request));
     }
 
 }

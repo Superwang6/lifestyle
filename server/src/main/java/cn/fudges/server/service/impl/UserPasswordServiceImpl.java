@@ -55,6 +55,7 @@ public class UserPasswordServiceImpl extends ServiceImpl<UserPasswordMapper, Use
 
         UserLoginResponse userLoginResponse = BeanUtil.copyProperties(userBase, UserLoginResponse.class);
         userLoginResponse.setPasswordLength(password.getLength());
+        userLoginResponse.setToken(StpUtil.getTokenValue());
         return userLoginResponse;
     }
 }

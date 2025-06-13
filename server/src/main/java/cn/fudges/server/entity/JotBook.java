@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -48,4 +49,7 @@ public class JotBook implements Serializable {
      */
     @TableField("is_remove")
     private Byte isRemove;
+
+    @TableField(exist = false)
+    private List<JotClassify> classifyList;
 }

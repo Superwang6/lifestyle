@@ -20,7 +20,11 @@ import crypto from 'crypto-js'
 		}
 		console.log(request);
 		post("/login/password",request, (data) => {
-			uni.navigateBack()
+			uni.setStorageSync('satoken', data.data.token)
+			console.log(data.data.token);
+			uni.switchTab({
+				url: '/pages/index/index'
+			});
 		})
 	}
 </script>

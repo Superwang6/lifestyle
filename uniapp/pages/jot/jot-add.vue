@@ -18,18 +18,18 @@
 				</uni-popup>
 			</uni-forms-item>
 			<uni-forms-item label="分类" name="classifyId">
-				<uni-data-checkbox mode='tag' :multiple='false' v-model="detailItem.classifyId" :localdata="classifyList"
+				<uni-data-checkbox mode='tag' :multiple='false' v-model="detailItem.classifyId" :localdata="classifyList" :wrap="true"
 					:map="{text:'name',value:'id'}" selected-color="#ADD8E6"></uni-data-checkbox>
 			</uni-forms-item>
 		</uni-forms>
-		<button class="btn-submit" type="default" @click="submit">提交</button>
+		<button class="btn-submit" type="default" @click="submit">保存</button>
 	</view>
 </template>
 
 <script setup>
+	import { onLoad } from '@dcloudio/uni-app'
 	import {
 		onMounted,
-		reactive,
 		ref
 	} from 'vue'
 	import {
@@ -42,8 +42,9 @@
 	
 	const now = new Date()
 	const title = ref('新增')
+	const mode = ref(0)
 	const form = ref(null)
-	const detailItem = reactive({
+	const detailItem = ref({
 		'classifyId': 1,
 		'remindTime': format(now, 'YYYY-MM-DD HH:mm:00'),
 		'status': 0,
@@ -68,7 +69,7 @@
 		timePickerPopup.value.open()
 	}
 	const onTimerPickerConfirm = (value) => {
-		detailItem.remindTime = value
+		detailItem.value.remindTime = value
 		timePickerPopup.value.close()
 	}
 	const onTimerPickerCancel = () => {
@@ -76,36 +77,76 @@
 	}
 
 	const back = () => {
-		uni.navigateBack({
-			delta: 1
+		uni.switchTab({
+			url: '/pages/jot/jot'
 		})
 	}
 	const queryJotClassify = () => {
 		const request = {
 			'pageNum': 1,
-			'pageSize': 30
+			'pageSize': 30,
+			'bookId': detailItem.value.bookId
 		}
 		post('/jotClassify/page', request, (data) => {
 			classifyList.value = []
 			classifyList.value.push(...data.data)
-			console.log(classifyList.value);
 		})
 	}
 	const submit = () => {
-		form.value.validate().then(res => {
-			console.log(detailItem);
-			post('/jotRecord/add', detailItem, () => {
-				uni.showToast({
-					title: "新增成功！"
+		if(mode.value == 0) {
+			form.value.validate().then(res => {
+				const request = {
+					'title': detailItem.value.title,
+					'description': detailItem.value.description,
+					'classifyId': detailItem.value.classifyId,
+					'bookId': detailItem.value.bookId,
+					'status': detailItem.value.status,
+					'remindTime': detailItem.value.remindTime
+				}
+				post('/jotRecord/add', request, () => {
+					uni.showToast({
+						title: "新增成功！"
+					})
+					back()
 				})
-				back()
+			}).catch(err => {
+				
 			})
-		}).catch(err => {
-			
-		})
+		} else if (mode.value == 1) {
+			form.value.validate().then(res => {
+				const request = {
+					'id': detailItem.value.id,
+					'title': detailItem.value.title,
+					'description': detailItem.value.description,
+					'classifyId': detailItem.value.classifyId,
+					'bookId': detailItem.value.bookId,
+					'status': detailItem.value.status,
+					'remindTime': detailItem.value.remindTime
+				}
+				post('/jotRecord/modify', request, () => {
+					uni.showToast({
+						title: "修改成功！"
+					})
+					back()
+				})
+			}).catch(err => {
+				
+			})
+		}
+		uni.$emit('jot-update')
 	}
 	onMounted(() => {
 		queryJotClassify()
+	})
+	onLoad((option) => {
+		mode.value = option.mode
+		if(option.mode == 0) {
+			title.value = "新增"
+			detailItem.value.bookId = option.bookId
+		} else if (option.mode == 1){
+			title.value = "修改"
+			detailItem.value = JSON.parse(decodeURIComponent(option.item))
+		}
 	})
 </script>
 

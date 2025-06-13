@@ -1,6 +1,7 @@
 package cn.fudges.server.response;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 
@@ -35,4 +36,6 @@ public class JotBookResponse implements Serializable {
      * 是否删除，0-否，1-是
      */
     private Byte isRemove;
+
+    private List<JotClassifyResponse> classifyList;
 }
