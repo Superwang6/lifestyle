@@ -66,4 +66,6 @@ public class JotRecordRequest extends RequestEntity implements Serializable {
     private LocalDateTime modifyTime;
 
     private Integer delayDays;
+
+    private Integer timeType;
 }

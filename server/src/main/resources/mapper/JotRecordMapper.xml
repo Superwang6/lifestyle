@@ -50,6 +50,12 @@
             <if test="request.status != null">
                 AND jr.status = #{request.status}
             </if>
+            <if test="request.startTime != null" >
+                AND jr.remind_time &gt;= #{request.startTime}
+            </if>
+            <if test="request.endTime != null" >
+                AND jr.remind_time &lt;= #{request.endTime}
+            </if>
         ORDER BY jr.create_time desc, jr.id desc
     </select>
 </mapper>

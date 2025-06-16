@@ -8,6 +8,7 @@ import cn.fudges.server.request.JotRecordRequest;
 import cn.fudges.server.service.JotRecordService;
 import cn.fudges.server.utils.AssertUtils;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -35,6 +37,28 @@ public class JotRecordServiceImpl extends ServiceImpl<JotRecordMapper, JotRecord
     @Override
     public IPage<JotRecord> queryPage(JotRecordRequest request) {
         request.setUserId(StpUtil.getLoginIdAsLong());
+        if(request.getTimeType() != null) {
+            switch (request.getTimeType()) {
+                case 0:
+                    request.setStartTime(DateUtil.beginOfDay(new Date()).toLocalDateTime());
+                    request.setEndTime(DateUtil.endOfDay(new Date()).toLocalDateTime());
+                    break;
+                case 1:
+                    request.setStartTime(DateUtil.beginOfDay(new Date()).toLocalDateTime());
+                    request.setEndTime(DateUtil.endOfDay(DateUtil.offsetDay(new Date(), 3)).toLocalDateTime());
+                    break;
+                case 2:
+                    request.setStartTime(DateUtil.beginOfDay(new Date()).toLocalDateTime());
+                    request.setEndTime(DateUtil.endOfDay(DateUtil.offsetDay(new Date(), 7)).toLocalDateTime());
+                    break;
+                case 3:
+                    request.setStartTime(DateUtil.endOfDay(new Date()).toLocalDateTime());
+                    break;
+                case 4:
+                    request.setEndTime(DateUtil.beginOfDay(new Date()).toLocalDateTime());
+                    break;
+            }
+        }
         return jotRecordMapper.queryPageList(request.getPage(), request);
     }
 
