@@ -39,8 +39,10 @@
 		display: flex;
 		flex-direction: column;
 		margin: 0 10px 0 10px;
+		
 
 		.header {
+			padding-top: var(--status-bar-height);
 			margin: 10px 0 10px 0;
 		}
 

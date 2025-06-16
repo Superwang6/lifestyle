@@ -10,7 +10,7 @@
 			</uni-forms-item>
 		</uni-forms>
 		<button class="login-btn" @click="login()">登录</button>
-	</view>
+	</view> 
 </template>
 
 <script setup>

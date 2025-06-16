@@ -3,20 +3,29 @@
 		<template #header>
 			筛选
 		</template>
-		<uni-forms label-position="top" :modelValue="formData">
+		<uni-forms label-position="top" :modelValue="jotRequest">
 			<uni-forms-item name="book" label="备忘本">
-				<uni-data-select v-model="formData.bookId" :localdata="bookData" :clear="false" @change="changeBook"></uni-data-select>
+				<uni-data-select v-model="jotRequest.bookId" :localdata="bookData" :clear="false" @change="changeBook"></uni-data-select>
+			</uni-forms-item>
+			<uni-forms-item name="time" label="时间">
+				<view class="time">
+					<view class="time-item" :style="jotRequest.timeType == 4 ? chooseTimeStyle: ''" @click="chooseTime(4)">历史</view>
+					<view class="time-item" :style="jotRequest.timeType == 0 ? chooseTimeStyle: ''" @click="chooseTime(0)">当日</view>
+					<view class="time-item" :style="jotRequest.timeType == 3 ? chooseTimeStyle: ''" @click="chooseTime(3)">将来</view>
+					<view class="time-item" :style="jotRequest.timeType == 1 ? chooseTimeStyle: ''" @click="chooseTime(1)">近三天</view>
+					<view class="time-item" :style="jotRequest.timeType == 2 ? chooseTimeStyle: ''" @click="chooseTime(2)">近七天</view>
+				</view>
 			</uni-forms-item>
 			<uni-forms-item name="classify" label="分类">
 				<view class="classify">
 					<template v-for="(item, index) in classifyList">
-						<view :style="selectClassifyIndex == index ? chooseStyle : ''" class="classify-item"
-							@click="chooseClassify(index)">{{item.name}}</view>
+						<view :style="jotRequest.classifyId == item.id ? chooseStyle : ''" class="classify-item"
+							@click="chooseClassify(item.id)">{{item.name}}</view>
 					</template>
 				</view>
 			</uni-forms-item>
 			<uni-forms-item name="status" label="状态">
-				<uni-data-checkbox mode='tag' :multiple='false' v-model="formData.status" :localdata="statusList"
+				<uni-data-checkbox mode='tag' :multiple='false' v-model="jotRequest.status" :localdata="statusList"
 					:map="{text:'name',value:'status'}" selected-color="#A6E22E"></uni-data-checkbox>
 			</uni-forms-item>
 		</uni-forms>
@@ -36,30 +45,18 @@
 		post
 	} from '@/utils/request';
 	import LsDrawer from '@/components/common/ls-drawer.vue';
+	import { format } from '@/utils/time';
+	import { useJotStore } from '@/stores/jot-store';
+	import { storeToRefs } from 'pinia'
 
 	const emits = defineEmits([
 		'filterParam'
 	])
 
 	const drawer = ref(null)
-	const formData = ref({})
+	const jotStore = useJotStore()
+	const { jotRequest } = storeToRefs(jotStore)
 	const openMore = () => {
-		const req = uni.getStorageSync('jot_more_filter')
-		if (req.status) {
-			formData.value.status = req.status
-		} else {
-			formData.value.status = 0
-		}
-		if (req.bookId) {
-			formData.value.bookId = req.bookId
-			classifyList.value = bookMap.value[req.bookId].classifyList
-			if (req.classifyId) {
-				formData.value.classifyId = req.classifyId
-			}
-		} else {
-			formData.value.bookId = bookList.value[0].id
-			classifyList.value = bookList.value[0].classifyList
-		}
 		drawer.value.open()
 	}
 	const statusList = ref([{
@@ -76,13 +73,11 @@
 		}
 	])
 	const classifyList = ref([])
-	const selectClassifyIndex = ref(null)
-	const chooseClassify = (index) => {
-		formData.value.classifyId = classifyList.value[index].id
-		if (selectClassifyIndex.value == index) {
-			selectClassifyIndex.value = null
+	const chooseClassify = (classifyId) => {
+		if(jotRequest.value.classifyId == classifyId) {
+			jotRequest.value.classifyId = null
 		} else {
-			selectClassifyIndex.value = index
+			jotRequest.value.classifyId = classifyId
 		}
 	}
 	const chooseStyle = reactive({
@@ -90,13 +85,12 @@
 		backgroundColor: 'lightblue'
 	})
 	const confirm = () => {
-		emits('filterParam', formData.value)
-		uni.setStorageSync('jot_more_filter', formData.value)
+		emits('filterParam')
+		uni.setStorageSync('jot_more_filter', jotRequest.value)
 		drawer.value.close()
 	}
 
 	const bookData = ref([])
-	const bookList = ref([])
 	const bookMap = ref({})
 	const queryBookList = () => {
 		const request = {
@@ -104,7 +98,6 @@
 			"pageSize": 30
 		}
 		post('/jotBook/page', request, (data) => {
-			bookList.value.push(...data.data)
 			for (var i = 0; i < data.data.length; i++) {
 				const res = {
 					'text': data.data[i].name,
@@ -113,14 +106,30 @@
 				bookData.value.push(res)
 				bookMap.value[data.data[i].id] = data.data[i]
 			}
+			if(jotRequest.value.bookId) {
+				classifyList.value = bookMap.value[jotRequest.value.bookId].classifyList
+			} else {
+				classifyList.value = data.data[0].classifyList
+			}
 		})
 	}
 	const changeBook = (bookId) => {
 		classifyList.value = bookMap.value[bookId].classifyList
-		selectClassifyIndex.value = null
-		formData.value.classifyId = null
-		console.log(formData.value);
+		jotRequest.value.classifyId = null
 	}
+	
+	const chooseTimeStyle = reactive({
+		color: '#FFFFFF',
+		backgroundColor: 'lightcoral'
+	})
+	const chooseTime = (index) => {
+		if(jotRequest.value.timeType != index) {
+			jotRequest.value.timeType = index
+		} else {
+			jotRequest.value.timeType = null
+		}
+	}
+	
 	onMounted(() => {
 		queryBookList()
 	})
@@ -130,6 +139,20 @@
 </script>
 
 <style lang="scss">
+	.time {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		
+		.time-item {
+			height: 25px;
+			line-height: 25px;
+			margin: 5px;
+			padding: 3px 15px 3px 15px;
+			background-color: lightgray;
+			border-radius: 10px;
+		}
+	}
 	.classify {
 		display: flex;
 		flex-direction: row;
@@ -151,16 +174,16 @@
 	}
 
 	.confirm-btn {
-		background-color: deepskyblue;
+		background-color: lightgreen;
+		border-radius: 20px;
+		height: 40px;
+		line-height: 40px;
 		text-align: center;
-		height: 30px;
-		line-height: 30px;
-		border-radius: 30px;
 	}
 
 	.confirm-btn:active {
 		transform: scale(0.96);
-		background-color: lightskyblue;
+		background-color: lightseagreen;
 		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
 </style>

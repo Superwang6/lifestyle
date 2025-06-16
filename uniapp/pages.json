@@ -14,11 +14,17 @@
 		},
 		{
 			"path": "pages/jot/jot-add"
+		},
+		{
+			"path": "pages/settings/settings"
 		}
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"bounce": "none"
+		}
 	},
 	"uniIdRouter": {},
 	"tabBar": {

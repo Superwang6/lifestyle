@@ -1,4 +1,4 @@
-var host = 'http://localhost:8080'
+var host = 'http://192.168.237.120:18888'
 export function post(url, req, successCallback, failCallback, completeCallback) {
 	uni.request({
 		url: host + url,

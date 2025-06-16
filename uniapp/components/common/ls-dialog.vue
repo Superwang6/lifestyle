@@ -22,7 +22,6 @@
 		dialoger.value.close()
 	}
 	const confirm = () => {
-		console.log(111);
 		emits('confirm')
 		dialoger.value.close()
 	}

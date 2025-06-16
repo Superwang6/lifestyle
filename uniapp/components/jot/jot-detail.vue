@@ -18,7 +18,7 @@
 			<view class="des">
 				{{ detailItem.description }}
 			</view>
-			<view class="classify">
+			<view v-if="detailItem.classifyName" class="classify">
 				{{ detailItem.classifyName }}
 			</view>
 		</view>
@@ -76,6 +76,7 @@
 			emits('refreshIndex')
 			draw.value.close()
 			uni.showToast({
+				icon: "none",
 				title: status == 1 ? "已完成备忘，太棒啦！" : "未完成备忘，勿灰心哦！"
 			})
 		})

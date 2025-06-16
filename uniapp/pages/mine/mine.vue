@@ -23,7 +23,7 @@
 				<view> 分组内容 </view>
 			</uni-group>
 			<uni-group margin-top="20">
-				<view class="setting">
+				<view class="setting" @click="settingClick">
 					<uni-icons type="gear" class="setting-left" size="27"></uni-icons>
 					<view class="setting-mid">设置</view>
 					<uni-icons type="right" class="setting-right"></uni-icons>
@@ -35,23 +35,32 @@
 
 <script setup>
 	import {
+		onShow
+	} from '@dcloudio/uni-app'
+	import {
 		onMounted,
 		ref
 	} from 'vue';
 	import {
 		post
 	} from '@/utils/request';
+	import {
+		checkLogin
+	} from '@/utils/check-login';
 
+	const userInfo = ref(uni.getStorageSync('userInfo'))
 
-	const userInfo = ref(null)
-	const toLoginPage = () => {
+	const settingClick = () => {
 		uni.navigateTo({
-			url: "/pages/login/login"
+			url: '/pages/settings/settings'
 		})
 	}
 
 	onMounted(() => {
-		userInfo.value = uni.getStorageSync('userInfo')
+
+	})
+	onShow(() => {
+		checkLogin()
 	})
 </script>
 
@@ -65,62 +74,64 @@
 		background-color: #EDEDED;
 		display: flex;
 		flex-direction: column;
-		
+
 		.header {
 			background-color: #FFFFFF;
 			display: flex;
 			flex-direction: column;
 			padding: 20px;
-			
+
 			.user-info {
 				display: flex;
 				flex-direction: row;
-				
+
 				.left {
 					width: 72px;
 					height: 72px;
 					margin-right: 10px;
 				}
+
 				.mid {
 					flex: 1;
-					
+
 					display: flex;
 					flex-direction: column;
 					justify-content: space-around;
-					
+
 					.mid-top {
 						font-size: 20px;
 						font-weight: bold;
 					}
+
 					.mid-bottom {
 						font-size: 12px;
 						color: #828282;
 					}
 				}
+
 				.right {
 					display: flex;
 					flex-direction: column;
 					justify-content: center;
 				}
 			}
-			
+
 			.description {
 				margin-top: 10px;
 				font-size: 12px;
-				
+
 			}
 		}
-		
+
 		.body {
-			
+
 			.setting {
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-				
-				.setting-left {
-					
-				}
+
+				.setting-left {}
+
 				.setting-mid {
 					flex: 1;
 					margin: 0 10px 0 10px;

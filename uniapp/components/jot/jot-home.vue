@@ -6,14 +6,23 @@
 		<view>
 			<uni-collapse accordion>
 				<template v-for="item in bookList">
-					<uni-collapse-item :title="item.name" @longpress="saveBookClick(item)">
-						<uni-list :border="false">
+					<uni-collapse-item>
+						<template v-slot:title>
+							<view class="collapse-title" @longpress="saveBookClick(item)">{{item.name}}</view>
+						</template>
+						<uni-swipe-action>
 							<template v-for="classifyItem in item.classifyList">
-								<uni-list-item :border="false" :title="classifyItem.name" :ellipsis="1"
-									class="list-item" @longpress="openClassDialog(item.id, classifyItem.id, classifyItem.name)">
-								</uni-list-item>
+								<uni-swipe-action-item :threshold="20" :ellipsis="1">
+									<template #left>
+										<view class="swipe-1"
+											@click="openClassDialog(item.id, classifyItem.id, classifyItem.name)">修改
+										</view>
+										<view class="swipe-2" @click="openDeleteDialog(classifyItem.id)">删除</view>
+									</template>
+									<view class="list-item">{{classifyItem.name}}</view>
+								</uni-swipe-action-item>
 							</template>
-						</uni-list>
+						</uni-swipe-action>
 						<view class="add-classify-btn" @click="openClassDialog(item.id)">
 							<uni-icons class="icon-classify" type="plusempty" size="24"></uni-icons>
 						</view>
@@ -25,14 +34,19 @@
 			<view class="add-book-btn" @click="saveBookClick()">添加备忘本</view>
 		</template>
 	</ls-drawer>
-	<ls-dialog ref="dialog" title="添加分类" @confirm="confirmClassify ">
+	<ls-dialog ref="dialog" title="保存分类" @confirm="confirmClassify ">
 		<uni-easyinput trim="all" v-model="saveClassifyName" placeholder="请输入分类名称"></uni-easyinput>
 	</ls-dialog>
-	<ls-dialog ref="dialogBook" title="添加备忘录" @confirm="confirmBook">
+	<ls-dialog ref="dialogBook" title="保存备忘录" @confirm="confirmBook">
 		<view class="book-form">
-			<uni-easyinput class="book-form-item" trim="all" v-model="saveBook.name" placeholder="请输入备忘录名称"></uni-easyinput>
-			<uni-easyinput class="book-form-item" trim="all" v-model="saveBook.description" placeholder="请输入备忘录描述" type="textarea"></uni-easyinput>
+			<uni-easyinput class="book-form-item" trim="all" v-model="saveBook.name"
+				placeholder="请输入备忘录名称"></uni-easyinput>
+			<uni-easyinput class="book-form-item" trim="all" v-model="saveBook.description" placeholder="请输入备忘录描述"
+				type="textarea"></uni-easyinput>
 		</view>
+	</ls-dialog>
+	<ls-dialog ref="deleteDialog" title="删除" @confirm="deleteClassify">
+		<view>是否确认删除？</view>
 	</ls-dialog>
 </template>
 
@@ -54,12 +68,12 @@
 	}
 	const bookList = ref([])
 	const queryBookList = () => {
+		bookList.value = []
 		const request = {
 			"pageNum": 1,
 			"pageSize": 30
 		}
 		post('/jotBook/page', request, (data) => {
-			console.log(data);
 			bookList.value.push(...data.data)
 		})
 	}
@@ -69,20 +83,19 @@
 	const modifyClassfyId = ref(null)
 	const openClassDialog = (bookId, classifyId, classifyName) => {
 		drawer.value.close()
-		
+
 		saveClassifyName.value = ''
 		modifyClassfyId.value = null
 		dialog.value.open()
 		addBookId.value = bookId
-		console.log(classifyId + '-' + classifyName);
 		modifyClassfyId.value = classifyId
-		if(classifyName) {
+		if (classifyName) {
 			saveClassifyName.value = classifyName
 		}
 	}
 	const saveClassifyName = ref('')
 	const confirmClassify = () => {
-		if(modifyClassfyId.value) {
+		if (modifyClassfyId.value) {
 			const request = {
 				'id': modifyClassfyId.value,
 				'bookId': addBookId.value,
@@ -93,7 +106,6 @@
 					icon: 'none',
 					title: '修改成功！'
 				})
-				bookList.value = []
 				queryBookList()
 			})
 		} else {
@@ -106,27 +118,26 @@
 					icon: 'none',
 					title: '添加成功！'
 				})
-				bookList.value = []
 				queryBookList()
 			})
 		}
 	}
-	
+
 	const dialogBook = ref(null)
 	const saveBook = ref({})
 	const saveBookClick = (item) => {
 		drawer.value.close()
-		
+
 		saveBook.value = {}
 		dialogBook.value.open()
-		if(item) {
+		if (item) {
 			saveBook.value.id = item.id
 			saveBook.value.name = item.name
 			saveBook.value.description = item.description
 		}
 	}
 	const confirmBook = () => {
-		if(saveBook.value.id) {
+		if (saveBook.value.id) {
 			const request = {
 				'id': saveBook.value.id,
 				'name': saveBook.value.name,
@@ -137,7 +148,6 @@
 					icon: 'none',
 					title: '修改成功！'
 				})
-				bookList.value = []
 				queryBookList()
 			})
 		} else {
@@ -150,10 +160,26 @@
 					icon: 'none',
 					title: '添加成功！'
 				})
-				bookList.value = []
 				queryBookList()
 			})
 		}
+	}
+	const deleteDialog = ref(null)
+	const deleteClassifyId = ref(null)
+	const openDeleteDialog = (classifyId) => {
+		drawer.value.close()
+		
+		deleteClassifyId.value = classifyId
+		deleteDialog.value.open()
+	}
+	const deleteClassify = () => {
+		post('/jotClassify/delete/' + deleteClassifyId.value, null, () => {
+			uni.showToast({
+				title: '删除成功！',
+				icon: 'none'
+			})
+			queryBookList()
+		})
 	}
 
 	onMounted(() => {
@@ -165,8 +191,39 @@
 </script>
 
 <style lang="scss">
+	.collapse-title {
+		font-size: 15px;
+		padding: 8px 0 8px 10px;
+		height: 30px;
+	}
+
+	.swipe-1 {
+		height: 40px;
+		line-height: 40px;
+		color: white;
+		background: lightblue;
+		padding: 0 15px;
+	}
+
+	.swipe-2 {
+		height: 40px;
+		line-height: 40px;
+		color: white;
+		background: lightcoral;
+		padding: 0 15px;
+	}
+
 	.list-item {
-		margin-left: 10px;
+		height: 40px;
+		line-height: 40px;
+		font-size: 15px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		display: block;
+		padding-left: 20px;
+
+		border-bottom: 1px solid lightgrey;
 	}
 
 	.add-classify-btn {
@@ -175,13 +232,13 @@
 		flex-direction: row;
 		justify-content: center;
 		border-radius: 20px;
-		margin: 0 20px 0 20px;
+		margin: 5px 20px 0 20px;
 
 		.icon-classify {
 			margin: 5px;
 		}
 	}
-	
+
 	.add-book-btn {
 		background-color: lightgreen;
 		border-radius: 20px;
@@ -189,15 +246,17 @@
 		line-height: 40px;
 		text-align: center;
 	}
+
 	.add-book-btn:active {
 		transform: scale(0.96);
 		background-color: lightseagreen;
 		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
-	
+
 	.book-form {
 		display: flex;
 		flex-direction: column;
+
 		.book-form-item {
 			margin: 5px 0 5px 0;
 		}

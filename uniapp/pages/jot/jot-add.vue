@@ -45,10 +45,7 @@
 	const mode = ref(0)
 	const form = ref(null)
 	const detailItem = ref({
-		'classifyId': 1,
 		'remindTime': format(now, 'YYYY-MM-DD HH:mm:00'),
-		'status': 0,
-		'bookId': 1,
 		'status': 0
 	})
 	const classifyList = ref([])
@@ -77,9 +74,7 @@
 	}
 
 	const back = () => {
-		uni.switchTab({
-			url: '/pages/jot/jot'
-		})
+		uni.navigateBack()
 	}
 	const queryJotClassify = () => {
 		const request = {
