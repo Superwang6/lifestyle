@@ -1,4 +1,5 @@
-var host = 'http://192.168.237.120:18888'
+var host = 'http://192.168.74.58:18888'
+// var host = 'http://www.fudges.cn:18888'
 export function post(url, req, successCallback, failCallback, completeCallback) {
 	uni.request({
 		url: host + url,
@@ -15,7 +16,7 @@ export function post(url, req, successCallback, failCallback, completeCallback) 
 					successCallback(res.data)
 				} else if (res.data.code == "1001") {
 					//未登录，跳登录页
-					uni.navigateTo({
+					uni.reLaunch({
 						url: '/pages/login/login'
 					})
 				} else {

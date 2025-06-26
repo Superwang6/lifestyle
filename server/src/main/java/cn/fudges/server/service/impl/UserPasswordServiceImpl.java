@@ -17,6 +17,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  * 用户密码表 服务实现类
@@ -52,6 +54,13 @@ public class UserPasswordServiceImpl extends ServiceImpl<UserPasswordMapper, Use
 
         // 登录成功
         StpUtil.login(userBase.getId());
+
+        // 保存用户信息
+        UserBase ub = new UserBase();
+        ub.setId(userBase.getId());
+        ub.setUniPushCid(request.getUniPushCid());
+        ub.setModifyTime(LocalDateTime.now());
+        userBaseService.updateById(ub);
 
         UserLoginResponse userLoginResponse = BeanUtil.copyProperties(userBase, UserLoginResponse.class);
         userLoginResponse.setPasswordLength(password.getLength());

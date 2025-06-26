@@ -1,10 +1,13 @@
 {
 	"pages": [
 		{
-			"path": "pages/jot/jot"
+			"path": "pages/launch/launch"
 		},
 		{
 			"path": "pages/index/index"
+		},
+		{
+			"path": "pages/jot/jot"
 		},
 		{
 			"path" : "pages/mine/mine"

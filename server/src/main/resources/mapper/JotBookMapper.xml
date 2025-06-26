@@ -9,11 +9,12 @@
         <result column="description" property="description" />
         <result column="user_id" property="userId" />
         <result column="is_remove" property="isRemove" />
+        <result column="order_num" property="orderNum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, description, user_id, is_remove
+        id, name, description, user_id, is_remove, `order_num`
     </sql>
 
 </mapper>

@@ -1,15 +1,21 @@
 package cn.fudges.server.request;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+import cn.fudges.server.common.request.RequestEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
+ *
  * @author wpy
- * @since 2025-05-23
+ * @since 2025-06-26
  */
 @Data
-public class UserBaseRequest implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class UserBaseRequest extends RequestEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -23,6 +29,21 @@ public class UserBaseRequest implements Serializable {
      * 手机号
      */
     private String mobilePhone;
+
+    /**
+     * uni-push2的client id
+     */
+    private String uniPushCid;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     /**
      * 是否删除，0-否，1-是

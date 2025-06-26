@@ -2,9 +2,11 @@ package cn.fudges.server.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.fudges.server.common.result.ResultResponse;
+import cn.fudges.server.entity.JotRecord;
 import cn.fudges.server.request.JotRecordRequest;
 import cn.fudges.server.response.JotRecordResponse;
 import cn.fudges.server.service.JotRecordService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,8 @@ public class JotRecordController {
 
     @PostMapping("/page")
     public ResultResponse<List<JotRecordResponse>> queryPage(@RequestBody JotRecordRequest request) {
-        return ResultResponse.success(jotRecordService.queryPage(request), JotRecordResponse.class);
+        IPage<JotRecord> page = jotRecordService.queryPage(request);
+        return ResultResponse.success(page, JotRecordResponse.class);
     }
 
     @PostMapping("/add")

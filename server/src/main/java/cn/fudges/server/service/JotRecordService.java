@@ -25,4 +25,7 @@ public interface JotRecordService extends IService<JotRecord> {
     Boolean delete(String id);
 
     Boolean delay(JotRecordRequest request);
+
+    void jotRemindJob();
+
 }

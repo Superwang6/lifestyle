@@ -51,7 +51,8 @@
 		former.value.validate().then(res => {
 			const request = {
 				"mobilePhone": res.mobilePhone,
-				"password": crypto.MD5(res.password).toString()
+				"password": crypto.MD5(res.password).toString(),
+				"uniPushCid": uni.getStorageSync('push-client-id')
 			}
 			post("/login/password", request, (data) => {
 				uni.showToast({
@@ -64,6 +65,7 @@
 				uni.switchTab({
 					url: '/pages/index/index'
 				});
+				
 			})
 		}).catch(() => {
 		})

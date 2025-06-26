@@ -171,7 +171,7 @@
 		.btn-submit {
 			width: 80%;
 			border-radius: 30px;
-			margin-bottom: 20px;
+			margin-bottom: 70px;
 		}
 
 	}

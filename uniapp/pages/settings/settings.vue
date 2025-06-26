@@ -1,7 +1,6 @@
 <template>
 	<view class="main-container">
-		<uni-nav-bar title="设置" left-icon="left" :shadow="false" :border="false" @clickLeft="back()"
-			background-color="#EDEDED"></uni-nav-bar>
+		<uni-nav-bar title="设置" left-icon="left" :shadow="false" :border="false" @clickLeft="back()"></uni-nav-bar>
 		<uni-group >
 			<view class="group">
 				<view class="group-left">个人资料</view>
@@ -23,7 +22,7 @@
 		uni.removeStorageSync('satoken')
 		uni.removeStorageSync('userInfo')
 		
-		uni.navigateTo({
+		uni.reLaunch({
 			url: '/pages/login/login'
 		})
 	}

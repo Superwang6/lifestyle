@@ -42,7 +42,7 @@ public class JotBookServiceImpl extends ServiceImpl<JotBookMapper, JotBook> impl
         request.setUserId(StpUtil.getLoginIdAsLong());
         QueryWrapper<JotBook> wrapper = new QueryWrapper<>();
         Map<String, Object> map = BeanUtil.beanToMap(request, true, true);
-        wrapper.allEq(map);
+        wrapper.allEq(map).orderByAsc("order_num");
         IPage<JotBook> page = page(request.getPage(), wrapper);
 
         LambdaQueryWrapper<JotClassify> classifyWrapper = new LambdaQueryWrapper<>();

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author wpy
- * @since 2025-05-24
+ * @since 2025-06-26
  */
 @Data
 @TableName("jot_record")
@@ -69,6 +69,12 @@ public class JotRecord implements Serializable {
     private LocalDateTime remindTime;
 
     /**
+     * 提醒状态，0-未提醒，1-已安排，2-推送成功，3-推送失败
+     */
+    @TableField("remind_status")
+    private Integer remindStatus;
+
+    /**
      * 创建时间
      */
     @TableField("create_time")
@@ -82,7 +88,7 @@ public class JotRecord implements Serializable {
 
     @TableField(exist = false)
     private String classifyName;
-    
+
     @TableField(exist = false)
     private String bookName;
 }

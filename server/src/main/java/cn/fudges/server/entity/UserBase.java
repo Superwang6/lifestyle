@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author wpy
- * @since 2025-05-23
+ * @since 2025-06-26
  */
 @Data
 @TableName("user_base")
@@ -36,6 +37,24 @@ public class UserBase implements Serializable {
      */
     @TableField("mobile_phone")
     private String mobilePhone;
+
+    /**
+     * uni-push2的client id
+     */
+    @TableField("uni_push_cid")
+    private String uniPushCid;
+
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    @TableField("modify_time")
+    private LocalDateTime modifyTime;
 
     /**
      * 是否删除，0-否，1-是

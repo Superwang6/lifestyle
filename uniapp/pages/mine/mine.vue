@@ -44,9 +44,6 @@
 	import {
 		post
 	} from '@/utils/request';
-	import {
-		checkLogin
-	} from '@/utils/check-login';
 
 	const userInfo = ref(uni.getStorageSync('userInfo'))
 
@@ -58,9 +55,6 @@
 
 	onMounted(() => {
 
-	})
-	onShow(() => {
-		checkLogin()
 	})
 </script>
 

@@ -34,8 +34,7 @@
 
 <script setup>
 	import {
-		onLoad,
-		onShow
+		onLoad
 	} from '@dcloudio/uni-app'
 	import {
 		onActivated,
@@ -55,9 +54,6 @@
 	import {
 		useJotStore
 	} from '@/stores/jot-store.js';
-	import {
-		checkLogin
-	} from '@/utils/check-login';
 
 	const jotStore = useJotStore()
 	const {
@@ -72,6 +68,7 @@
 		post('/jotRecord/page', jotRequest.value, (data) => {
 			paging.value.complete(data.data);
 		}, () => {
+			console.log('query jot error');
 			paging.value.complete(false);
 		})
 	}
@@ -133,9 +130,6 @@
 		uni.$on('jot-update', () => {
 			refreshIndex()
 		})
-	})
-	onShow(() => {
-		checkLogin()
 	})
 	onMounted(() => {
 		jotStore.initJotRequest()

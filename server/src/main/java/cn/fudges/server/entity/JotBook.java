@@ -50,6 +50,12 @@ public class JotBook implements Serializable {
     @TableField("is_remove")
     private Byte isRemove;
 
+    /**
+     * 排序号
+     */
+    @TableField("order_num")
+    private Integer orderNum;
+
     @TableField(exist = false)
     private List<JotClassify> classifyList;
 }

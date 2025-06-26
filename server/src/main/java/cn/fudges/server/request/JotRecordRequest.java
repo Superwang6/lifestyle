@@ -56,6 +56,11 @@ public class JotRecordRequest extends RequestEntity implements Serializable {
     private LocalDateTime remindTime;
 
     /**
+     * 提醒状态，0-未提醒，1-已安排，2-推送成功，3-推送失败
+     */
+    private Integer remindStatus;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

@@ -232,7 +232,7 @@
 		flex-direction: row;
 		justify-content: center;
 		border-radius: 20px;
-		margin: 5px 20px 0 20px;
+		margin: 5px 20px 5px 20px;
 
 		.icon-classify {
 			margin: 5px;

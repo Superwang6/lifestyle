@@ -4,6 +4,8 @@ import cn.dev33.satoken.exception.SaTokenException;
 import cn.fudges.server.common.exception.BusinessException;
 import cn.fudges.server.common.result.ResultCodeEnum;
 import cn.fudges.server.common.result.ResultResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,6 +17,8 @@ import java.util.List;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // 处理业务异常
     @ExceptionHandler(BusinessException.class)
@@ -36,6 +40,7 @@ public class GlobalExceptionHandler {
     // 捕获所有其他异常
     @ExceptionHandler(Exception.class)
     public ResultResponse<Void> handleException(Exception e) {
+        LOGGER.error(e.getMessage(), e);
         return ResultResponse.fail(ResultCodeEnum.SYSTEM_ERROR.getCode(), e.getMessage(), null);
     }
 }

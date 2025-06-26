@@ -1,6 +1,6 @@
 package cn.fudges.server.generator;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
@@ -15,7 +15,7 @@ import java.sql.Types;
 
 public class CodeGenerator {
 
-    public static final String TABLE_NAME = "jot_record";
+    public static final String TABLE_NAME = "jot_book";
     public static final String AUTHOR = "wpy";
 
 
@@ -48,7 +48,7 @@ public class CodeGenerator {
                         builder.addInclude(TABLE_NAME) // 设置需要生成的表名
                                 // entity
                                 .entityBuilder()
-                                .enableLombok(new ClassAnnotationAttributes("@Data","lombok.Data"))
+                                .enableLombok(new ClassAnnotationAttributes("@Data", "lombok.Data"))
                                 .enableFileOverride()
                                 .enableRemoveIsPrefix()
                                 .enableTableFieldAnnotation()
@@ -84,6 +84,11 @@ public class CodeGenerator {
                                                 .packageName("request")
                                                 .enableFileOverride()
                                                 .build()
+                                )
+                                .customMap(
+                                        Dict.create()
+                                                .set("package.Request", PARENT_PACKAGE + ".request")
+                                                .set("package.Response", PARENT_PACKAGE + ".response")
                                 )
                 )
                 .execute();

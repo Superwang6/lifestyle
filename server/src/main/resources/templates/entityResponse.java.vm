@@ -1,4 +1,4 @@
-package ${package.Entity};
+package ${package.Response};
 
 #foreach($pkg in ${importEntityJavaPackages})
 import ${pkg};

@@ -1,12 +1,14 @@
 package cn.fudges.server.response;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
 /**
+ *
  * @author wpy
- * @since 2025-05-23
+ * @since 2025-06-26
  */
 @Data
 public class UserBaseResponse implements Serializable {
@@ -24,6 +26,21 @@ public class UserBaseResponse implements Serializable {
      * 手机号
      */
     private String mobilePhone;
+
+    /**
+     * uni-push2的client id
+     */
+    private String uniPushCid;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     /**
      * 是否删除，0-否，1-是

@@ -12,13 +12,14 @@
         <result column="user_id" property="userId" />
         <result column="status" property="status" />
         <result column="remind_time" property="remindTime" />
+        <result column="remind_status" property="remindStatus" />
         <result column="create_time" property="createTime" />
         <result column="modify_time" property="modifyTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, description, classify_id, book_id, user_id, status, remind_time, create_time, modify_time
+        id, title, description, classify_id, book_id, user_id, status, remind_time, remind_status, create_time, modify_time
     </sql>
 
     <resultMap id="resultMap" type="cn.fudges.server.entity.JotRecord" extends="BaseResultMap">
