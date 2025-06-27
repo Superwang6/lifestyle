@@ -6,19 +6,17 @@ import cn.fudges.server.entity.UserBase;
 import cn.fudges.server.enums.PushRecordTypeEnum;
 import cn.fudges.server.mapper.PushRecordMapper;
 import cn.fudges.server.request.PushRecordRequest;
-import cn.fudges.server.service.PushRecordService;
-import cn.fudges.server.service.UserBaseService;
+import cn.fudges.server.service.inner.PushRecordService;
+import cn.fudges.server.service.inner.UserBaseService;
 import cn.fudges.server.utils.AssertUtils;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,26 +29,23 @@ import java.time.LocalDateTime;
  * @author wpy
  * @since 2025-06-26
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRecord> implements PushRecordService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PushRecordServiceImpl.class);
-
-    public static final String PUSH_JOT_REMIND_URL = "https://fc-mp-821da366-0775-451d-a73a-1118c8627b10.next.bspapp.com/sendUniPush";
+    public static final String PUSH_URL = "https://fc-mp-821da366-0775-451d-a73a-1118c8627b10.next.bspapp.com/sendUniPush";
 
     private final UserBaseService userBaseService;
 
     @Override
-    public boolean pushJotRemindRecord(PushRecordRequest pushRecordRequest) {
+    public boolean sendPushRecord(PushRecordRequest pushRecordRequest) {
         AssertUtils.isNotNull(pushRecordRequest, ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotBlank(pushRecordRequest.getContent(), ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotNull(pushRecordRequest.getTargetUserId(), ResultCodeEnum.PARAM_ERROR);
 
-
         PushRecord pushRecord = new PushRecord();
-        pushRecord.setUrl(PUSH_JOT_REMIND_URL);
-
+        pushRecord.setUrl(PUSH_URL);
         pushRecord.setTargetUserId(pushRecordRequest.getTargetUserId());
         UserBase user = userBaseService.getById(pushRecordRequest.getTargetUserId());
         pushRecord.setTargetId(user.getUniPushCid());
@@ -61,9 +56,9 @@ public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRec
         Dict param = Dict.create()
                 .set("cid", pushRecord.getTargetId())
                 .set("content", pushRecordRequest.getContent())
-                .set("payload", Dict.create().set("type", PushRecordTypeEnum.JOT_REMIND.getType()).set("businessId", pushRecordRequest.getBusinessId()));
-        if(StrUtil.isBlank(pushRecordRequest.getTitle())) {
-            param.set("title", PushRecordTypeEnum.JOT_REMIND.getTitle());
+                .set("payload", pushRecordRequest.getPayload());
+        if(StrUtil.isNotBlank(pushRecordRequest.getTitle())) {
+            param.set("title", pushRecordRequest.getTitle());
         }
         pushRecord.setRequest(JSONUtil.toJsonStr(param));
 
@@ -71,7 +66,7 @@ public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRec
     }
 
     private boolean sendPushRecord(PushRecord pushRecord) {
-        LOGGER.info("PushRecordService.sendPushRecord: {}", pushRecord);
+        log.info("PushRecordService.sendPushRecord: {}", pushRecord);
         AssertUtils.isNotNull(pushRecord, ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotBlank(pushRecord.getRequest(), ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotBlank(pushRecord.getUrl(), ResultCodeEnum.PARAM_ERROR);

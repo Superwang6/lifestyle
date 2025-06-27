@@ -6,8 +6,8 @@ import cn.fudges.server.entity.JotBook;
 import cn.fudges.server.entity.JotClassify;
 import cn.fudges.server.mapper.JotBookMapper;
 import cn.fudges.server.request.JotBookRequest;
-import cn.fudges.server.service.JotBookService;
-import cn.fudges.server.service.JotClassifyService;
+import cn.fudges.server.service.inner.JotBookService;
+import cn.fudges.server.service.inner.JotClassifyService;
 import cn.fudges.server.utils.AssertUtils;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

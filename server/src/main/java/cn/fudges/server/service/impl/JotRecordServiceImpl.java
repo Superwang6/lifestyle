@@ -3,12 +3,12 @@ package cn.fudges.server.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.fudges.server.common.result.ResultCodeEnum;
 import cn.fudges.server.entity.JotRecord;
-import cn.fudges.server.enums.PushRecordTypeEnum;
 import cn.fudges.server.mapper.JotRecordMapper;
 import cn.fudges.server.request.JotRecordRequest;
 import cn.fudges.server.request.PushRecordRequest;
-import cn.fudges.server.service.JotRecordService;
-import cn.fudges.server.service.PushRecordService;
+import cn.fudges.server.service.event.JotRemindEvent;
+import cn.fudges.server.service.inner.JotRecordService;
+import cn.fudges.server.service.inner.PushRecordService;
 import cn.fudges.server.utils.AssertUtils;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,9 +38,7 @@ public class JotRecordServiceImpl extends ServiceImpl<JotRecordMapper, JotRecord
 
     private final JotRecordMapper jotRecordMapper;
 
-    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
-    private final PushRecordService pushRecordService;
+    private final ApplicationContext applicationContext;
 
     @Override
     public IPage<JotRecord> queryPage(JotRecordRequest request) {
@@ -134,30 +132,15 @@ public class JotRecordServiceImpl extends ServiceImpl<JotRecordMapper, JotRecord
         List<JotRecord> list = list(queryWrapper);
         if(CollUtil.isNotEmpty(list)) {
             for (JotRecord record : list) {
-                threadPoolTaskExecutor.execute(() -> {
-                    try {
-                        JotRecord update = new JotRecord();
-                        update.setId(record.getId());
-                        update.setRemindStatus(1);
-                        update.setModifyTime(LocalDateTime.now());
-                        updateById(update);
+                JotRecord update = new JotRecord();
+                update.setId(record.getId());
+                update.setRemindStatus(1);
+                update.setModifyTime(LocalDateTime.now());
+                updateById(update);
 
-                        PushRecordRequest pushRecordRequest = new PushRecordRequest();
-                        pushRecordRequest.setBusinessId(record.getId());
-                        pushRecordRequest.setContent("【" + record.getTitle() + "】已到提醒时间！");
-                        pushRecordRequest.setTargetUserId(record.getUserId());
-                        boolean result = pushRecordService.pushJotRemindRecord(pushRecordRequest);
-                        if(result) {
-                            update.setRemindStatus(2);
-                            updateById(update);
-                        }
-                    } catch (Exception e) {
-                        JotRecord update = new JotRecord();
-                        update.setId(record.getId());
-                        update.setRemindStatus(3);
-                        updateById(update);
-                    }
-                });
+                JotRemindEvent event = new JotRemindEvent(this);
+                event.setJotRecordId(record.getId());
+                applicationContext.publishEvent(event);
             }
         }
     }

@@ -2,7 +2,7 @@ package cn.fudges.server.controller;
 
 import cn.fudges.server.common.result.ResultResponse;
 import cn.fudges.server.response.UserBaseResponse;
-import cn.fudges.server.service.UserBaseService;
+import cn.fudges.server.service.inner.UserBaseService;
 import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;

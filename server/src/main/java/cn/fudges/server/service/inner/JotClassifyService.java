@@ -1,8 +1,7 @@
-package cn.fudges.server.service;
+package cn.fudges.server.service.inner;
 
 import cn.fudges.server.entity.JotClassify;
 import cn.fudges.server.request.JotClassifyRequest;
-import cn.fudges.server.response.JotClassifyResponse;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 

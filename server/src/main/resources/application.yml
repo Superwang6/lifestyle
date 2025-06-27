@@ -37,3 +37,7 @@ sa-token:
   token-style: simple-uuid
   # 是否输出操作日志
   is-log: true
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %highlight(%-5level) %clr([%15thread]){faint} %clr([%40logger{39}]){cyan} %clr([%X{traceId}]){faint} %clr(:){faint} %m%n"

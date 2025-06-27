@@ -2,7 +2,7 @@ package cn.fudges.server.service.impl;
 
 import cn.fudges.server.entity.UserBase;
 import cn.fudges.server.mapper.UserBaseMapper;
-import cn.fudges.server.service.UserBaseService;
+import cn.fudges.server.service.inner.UserBaseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

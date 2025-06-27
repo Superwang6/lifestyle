@@ -1,5 +1,6 @@
 package cn.fudges.server.service;
 
+import cn.fudges.server.service.inner.JotRecordService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

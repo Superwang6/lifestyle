@@ -1,9 +1,6 @@
-package cn.fudges.server.service;
+package cn.fudges.server.service.inner;
 
 import cn.fudges.server.entity.UserBase;
-import cn.fudges.server.request.UserBaseRequest;
-import cn.fudges.server.request.UserPasswordRequest;
-import cn.fudges.server.response.UserBaseResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

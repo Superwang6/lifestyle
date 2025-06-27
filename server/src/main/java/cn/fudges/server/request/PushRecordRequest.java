@@ -2,16 +2,16 @@ package cn.fudges.server.request;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import cn.fudges.server.common.request.RequestEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
-*
-* @author wpy
-* @since 2025-06-26
-*/
+ * @author wpy
+ * @since 2025-06-26
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PushRecordRequest extends RequestEntity implements Serializable {
@@ -32,5 +32,5 @@ public class PushRecordRequest extends RequestEntity implements Serializable {
 
     private String content;
 
-    private Long businessId;
+    private Map<String, Object> payload;
 }

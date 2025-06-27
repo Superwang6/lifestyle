@@ -1,8 +1,7 @@
-package cn.fudges.server.service;
+package cn.fudges.server.service.inner;
 
 import cn.fudges.server.entity.JotRecord;
 import cn.fudges.server.request.JotRecordRequest;
-import cn.fudges.server.response.JotRecordResponse;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 

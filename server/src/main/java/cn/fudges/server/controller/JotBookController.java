@@ -3,7 +3,7 @@ package cn.fudges.server.controller;
 import cn.fudges.server.common.result.ResultResponse;
 import cn.fudges.server.request.JotBookRequest;
 import cn.fudges.server.response.JotBookResponse;
-import cn.fudges.server.service.JotBookService;
+import cn.fudges.server.service.inner.JotBookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

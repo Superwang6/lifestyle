@@ -1,11 +1,9 @@
-package cn.fudges.server.service;
+package cn.fudges.server.service.inner;
 
 import cn.fudges.server.entity.JotBook;
 import cn.fudges.server.request.JotBookRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
  * <p>

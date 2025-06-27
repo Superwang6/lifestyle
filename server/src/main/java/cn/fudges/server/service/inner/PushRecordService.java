@@ -1,4 +1,4 @@
-package cn.fudges.server.service;
+package cn.fudges.server.service.inner;
 
 import cn.fudges.server.entity.PushRecord;
 import cn.fudges.server.request.PushRecordRequest;
@@ -14,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface PushRecordService extends IService<PushRecord> {
 
-    boolean pushJotRemindRecord(PushRecordRequest pushRecordRequest);
+    boolean sendPushRecord(PushRecordRequest pushRecordRequest);
 }
