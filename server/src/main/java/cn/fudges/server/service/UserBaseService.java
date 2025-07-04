@@ -1,4 +1,4 @@
-package cn.fudges.server.service.inner;
+package cn.fudges.server.service;
 
 import cn.fudges.server.entity.UserBase;
 import com.baomidou.mybatisplus.extension.service.IService;

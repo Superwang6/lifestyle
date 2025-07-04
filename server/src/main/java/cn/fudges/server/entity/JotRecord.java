@@ -63,16 +63,34 @@ public class JotRecord implements Serializable {
     private Integer status;
 
     /**
+     * 提醒类型，0-单次，1-定时任务
+     */
+    @TableField("remind_type")
+    private Integer remindType;
+
+    /**
      * 提醒时间
      */
     @TableField("remind_time")
     private LocalDateTime remindTime;
 
     /**
-     * 提醒状态，0-未提醒，1-已安排，2-推送成功，3-推送失败
+     * 提醒状态，0-未提醒，1-已安排，2-推送成功，3-推送失败，4-提醒中
      */
     @TableField("remind_status")
     private Integer remindStatus;
+
+    /**
+     * 定时任务id
+     */
+    @TableField("schedule_task_id")
+    private Long scheduleTaskId;
+
+    /**
+     * 定时提醒json
+     */
+    @TableField("remind_time_json")
+    private String remindTimeJson;
 
     /**
      * 创建时间

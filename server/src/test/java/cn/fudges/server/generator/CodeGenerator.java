@@ -15,7 +15,7 @@ import java.sql.Types;
 
 public class CodeGenerator {
 
-    public static final String TABLE_NAME = "jot_book";
+    public static final String TABLE_NAME = "schedule_record";
     public static final String AUTHOR = "wpy";
 
 

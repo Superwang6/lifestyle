@@ -1,10 +1,11 @@
 package cn.fudges.server.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.fudges.server.common.result.ResultResponse;
 import cn.fudges.server.entity.JotRecord;
 import cn.fudges.server.request.JotRecordRequest;
 import cn.fudges.server.response.JotRecordResponse;
-import cn.fudges.server.service.inner.JotRecordService;
+import cn.fudges.server.service.JotRecordService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -28,27 +29,34 @@ public class JotRecordController {
 
     @PostMapping("/page")
     public ResultResponse<List<JotRecordResponse>> queryPage(@RequestBody JotRecordRequest request) {
+        request.setUserId(StpUtil.getLoginIdAsLong());
         IPage<JotRecord> page = jotRecordService.queryPage(request);
         return ResultResponse.success(page, JotRecordResponse.class);
     }
 
     @PostMapping("/add")
     public ResultResponse<Boolean> addJotRecord(@RequestBody JotRecordRequest request) {
+        request.setUserId(StpUtil.getLoginIdAsLong());
         return ResultResponse.success(jotRecordService.addJotRecord(request));
     }
 
     @PostMapping("/modify")
     public ResultResponse<Boolean> modifyJotRecord(@RequestBody JotRecordRequest request) {
+        request.setUserId(StpUtil.getLoginIdAsLong());
         return ResultResponse.success(jotRecordService.modifyJotRecord(request));
     }
 
     @PostMapping("/delete/{id}")
-    public ResultResponse<Boolean> delete(@PathVariable String id) {
-        return ResultResponse.success(jotRecordService.delete(id));
+    public ResultResponse<Boolean> delete(@PathVariable Long id) {
+        JotRecordRequest request = new JotRecordRequest();
+        request.setId(id);
+        request.setUserId(StpUtil.getLoginIdAsLong());
+        return ResultResponse.success(jotRecordService.delete(request));
     }
 
     @PostMapping("/delay")
     public ResultResponse<Boolean> delay(@RequestBody JotRecordRequest request) {
+        request.setUserId(StpUtil.getLoginIdAsLong());
         return ResultResponse.success(jotRecordService.delay(request));
     }
 }

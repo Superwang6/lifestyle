@@ -14,6 +14,8 @@ public class JotRemindEvent extends ApplicationEvent {
 
     private Long jotRecordId;
 
+    private Boolean timesExhaustion;
+
     public JotRemindEvent(Object source) {
         super(source);
     }

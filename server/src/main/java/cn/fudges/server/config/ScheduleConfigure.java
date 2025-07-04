@@ -1,5 +1,6 @@
 package cn.fudges.server.config;
 
+import cn.fudges.server.utils.MdcTaskDecorator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -20,6 +21,7 @@ public class ScheduleConfigure implements SchedulingConfigurer {
         scheduler.setPoolSize(5);
         scheduler.setThreadNamePrefix("schedule-");
         scheduler.initialize();
+        scheduler.setTaskDecorator(new MdcTaskDecorator());
         registrar.setTaskScheduler(scheduler);
     }
 }

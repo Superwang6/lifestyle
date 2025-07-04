@@ -16,8 +16,7 @@ public class LogTraceFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            String traceId = IdUtil.fastSimpleUUID();
-            MDC.put("traceId", traceId);
+            MDC.put("traceId", IdUtil.fastSimpleUUID());
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             MDC.clear();

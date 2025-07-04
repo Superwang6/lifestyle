@@ -1,4 +1,5 @@
 var host = 'http://192.168.74.58:18888'
+let isRedirectLogin = false
 // var host = 'http://www.fudges.cn:18888'
 export function post(url, req, successCallback, failCallback, completeCallback) {
 	uni.request({
@@ -15,9 +16,16 @@ export function post(url, req, successCallback, failCallback, completeCallback) 
 				if(res.data.code == "00000") {
 					successCallback(res.data)
 				} else if (res.data.code == "1001") {
+					uni.removeStorageSync('userInfo');
+					isRedirectLogin = true
 					//未登录，跳登录页
 					uni.reLaunch({
-						url: '/pages/login/login'
+						url: '/pages/login/login',
+						complete: () => {
+							setTimeout(() => {
+								isRedirectLogin = false
+							}, 1000)
+						}
 					})
 				} else {
 					if(failCallback) {

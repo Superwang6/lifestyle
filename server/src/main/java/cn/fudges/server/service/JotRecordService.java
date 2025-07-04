@@ -1,4 +1,4 @@
-package cn.fudges.server.service.inner;
+package cn.fudges.server.service;
 
 import cn.fudges.server.entity.JotRecord;
 import cn.fudges.server.request.JotRecordRequest;
@@ -21,7 +21,7 @@ public interface JotRecordService extends IService<JotRecord> {
 
     Boolean modifyJotRecord(JotRecordRequest request);
 
-    Boolean delete(String id);
+    Boolean delete(JotRecordRequest request);
 
     Boolean delay(JotRecordRequest request);
 

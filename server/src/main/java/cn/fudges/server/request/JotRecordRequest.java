@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import cn.fudges.server.common.request.RequestEntity;
+import cn.fudges.server.entity.bo.TimeCron;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -51,14 +52,29 @@ public class JotRecordRequest extends RequestEntity implements Serializable {
     private Integer status;
 
     /**
+     * 提醒类型，0-单次，1-定时任务
+     */
+    private Integer remindType;
+
+    /**
      * 提醒时间
      */
     private LocalDateTime remindTime;
 
     /**
-     * 提醒状态，0-未提醒，1-已安排，2-推送成功，3-推送失败
+     * 提醒状态，0-未提醒，1-已安排，2-推送成功，3-推送失败，4-提醒中
      */
     private Integer remindStatus;
+
+    /**
+     * 定时任务id
+     */
+    private Long scheduleTaskId;
+
+    /**
+     * 定时提醒json
+     */
+    private String remindTimeJson;
 
     /**
      * 创建时间
@@ -73,4 +89,6 @@ public class JotRecordRequest extends RequestEntity implements Serializable {
     private Integer delayDays;
 
     private Integer timeType;
+
+    private TimeCron timeCron;
 }

@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.fudges.server.common.result.ResultResponse;
 import cn.fudges.server.request.UserPasswordRequest;
 import cn.fudges.server.response.UserLoginResponse;
-import cn.fudges.server.service.inner.UserPasswordService;
+import cn.fudges.server.service.UserPasswordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

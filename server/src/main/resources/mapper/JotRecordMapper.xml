@@ -11,15 +11,18 @@
         <result column="book_id" property="bookId" />
         <result column="user_id" property="userId" />
         <result column="status" property="status" />
+        <result column="remind_type" property="remindType" />
         <result column="remind_time" property="remindTime" />
         <result column="remind_status" property="remindStatus" />
+        <result column="schedule_task_id" property="scheduleTaskId" />
+        <result column="remind_time_json" property="remindTimeJson" />
         <result column="create_time" property="createTime" />
         <result column="modify_time" property="modifyTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, description, classify_id, book_id, user_id, status, remind_time, remind_status, create_time, modify_time
+        id, title, description, classify_id, book_id, user_id, status, remind_type, remind_time, remind_status, schedule_task_id, remind_time_json, create_time, modify_time
     </sql>
 
     <resultMap id="resultMap" type="cn.fudges.server.entity.JotRecord" extends="BaseResultMap">
@@ -56,6 +59,9 @@
             </if>
             <if test="request.endTime != null" >
                 AND jr.remind_time &lt;= #{request.endTime}
+            </if>
+            <if test="request.remindType != null">
+                AND jr.remind_type = #{request.remindType}
             </if>
         ORDER BY jr.create_time desc, jr.id desc
     </select>

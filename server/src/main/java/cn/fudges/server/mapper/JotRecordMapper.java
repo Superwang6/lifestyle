@@ -2,7 +2,6 @@ package cn.fudges.server.mapper;
 
 import cn.fudges.server.entity.JotRecord;
 import cn.fudges.server.request.JotRecordRequest;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;

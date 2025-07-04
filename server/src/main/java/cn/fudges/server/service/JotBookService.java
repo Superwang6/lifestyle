@@ -1,4 +1,4 @@
-package cn.fudges.server.service.inner;
+package cn.fudges.server.service;
 
 import cn.fudges.server.entity.JotBook;
 import cn.fudges.server.request.JotBookRequest;

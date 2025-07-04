@@ -1,5 +1,6 @@
 package cn.fudges.server.config;
 
+import cn.fudges.server.utils.MdcTaskDecorator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -22,6 +23,7 @@ public class AsyncConfigure implements AsyncConfigurer {
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(1000);
         executor.setThreadNamePrefix("async-");
+        executor.setTaskDecorator(new MdcTaskDecorator());
         executor.initialize();
         return executor;
     }
