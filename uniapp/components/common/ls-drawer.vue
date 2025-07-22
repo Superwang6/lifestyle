@@ -35,11 +35,10 @@
 
 <style lang="scss">
 	.content {
-		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		margin: 0 10px 0 10px;
-		
+		height: 100vh;
 
 		.header {
 			padding-top: var(--status-bar-height);
@@ -47,7 +46,8 @@
 		}
 
 		.body {
-			flex: 1
+			flex: 1;
+			overflow: hidden;
 		}
 
 		.bottom {

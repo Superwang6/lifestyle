@@ -24,10 +24,6 @@
 		</view>
 		<template #bottom>
 			<view class="card-actions">
-				<view class="card-actions-item" @click="delay()">
-					<uni-icons type="arrow-left" size="25" color="#999"></uni-icons>
-					<text class="card-actions-item-text">延后</text>
-				</view>
 				<view class="card-actions-item" @click="modifyStatus(3)">
 					<uni-icons type="closeempty" size="25" color="#999"></uni-icons>
 					<text class="card-actions-item-text">失败</text>
@@ -54,17 +50,9 @@
 		detailItem.value = detail
 		draw.value.open()
 	}
-	const delay = () => {
-		const request = {
-			"id": detailItem.value.id,
-			"delayDays": 1
-		}
-		post('/jotRecord/delay',request , () => {
-			emits('refreshIndex')
-			draw.value.close()
-			uni.showToast({
-				title: "延期成功！"
-			})
+	const modifyDetail = () => {
+		uni.navigateTo({
+			url: '/pages/jot/jot-add?mode=1&item=' + encodeURIComponent(JSON.stringify(detailItem.value))
 		})
 	}
 	const modifyStatus = (status) => {
@@ -100,7 +88,7 @@
 			
 			.title {
 				width: 80%;
-				font-size: 20px;
+				font-size: var(--font-size-llg);
 				font-weight: bold;
 				margin: 10px 0px 10px 0px;
 				
@@ -110,17 +98,17 @@
 				display: block;
 			}
 			.status {
-				font-size: 12px;
+				font-size: var(--font-size-sm)
 			}
 		}
 		
 		.time {
-			font-size: 10px;
+			font-size: var(--font-size-ssm);
 			color: lightgray
 		}
 		.des {
 			margin-top: 20px;
-			font-size: 15px;
+			font-size: var(--font-size);
 			background-color: #EAF1F5;
 			border-radius: 10px;
 			padding: 10px;
@@ -130,10 +118,10 @@
 		}
 		.classify {
 			margin-top: 10px;
-			border-radius: 25px;
+			border-radius: var(--button-radius);
 			padding: 5px 20px 5px 20px;
-			background-color: lightblue;
-			font-size: 10px;
+			background-color: var(--primary-color);
+			font-size: var(--font-size-sm);
 			
 			align-self: flex-start;
 			width: auto;

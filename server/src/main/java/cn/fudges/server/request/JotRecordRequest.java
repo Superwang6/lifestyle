@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import cn.fudges.server.common.request.RequestEntity;
-import cn.fudges.server.entity.bo.TimeCron;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -90,5 +89,7 @@ public class JotRecordRequest extends RequestEntity implements Serializable {
 
     private Integer timeType;
 
-    private TimeCron timeCron;
+    private String cronExpression;
+
+    private Integer triggerTimes;
 }

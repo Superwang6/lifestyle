@@ -12,11 +12,12 @@
         <result column="user_id" property="userId" />
         <result column="modify_time" property="modifyTime" />
         <result column="business_type" property="businessType" />
+        <result column="status" property="status" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, cron, trigger_times, name, create_time, user_id, modify_time, business_type
+        id, cron, trigger_times, name, create_time, user_id, modify_time, business_type, status
     </sql>
 
 </mapper>

@@ -1,0 +1,91 @@
+/* === CSS 变量（用于动态主题切换） === */
+:root {
+  --primary-color: #90EE90;
+  --dangrous-color: #dd524d;
+  --bg-color: #f8f8f8;
+  --border-color: #ddd;
+  --text-color: #333;
+  --light-text-color: gray;
+  --reverse-text-color: white;
+  
+  --item-radius: 18rpx;
+  --button-radius: 48rpx;
+  
+  --font-size: 28rpx;
+  --font-size-llg: 36rpx;
+  --font-size-lg: 32rpx;
+  --font-size-sm: 24rpx;
+  --font-size-ssm: 20rpx;
+  --radius-base: 8rpx;
+}
+
+/* === 通用工具类 === */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--text-color);
+}
+
+.bg-primary {
+  background-color: var(--bg-color);
+  color: #fff;
+}
+
+/* 按钮基础样式 */
+.btn {
+  padding: 16rpx 32rpx;
+  border-radius: var(--button-radius);
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-size: var(--font-size);
+  text-align: center;
+}
+.btn:active {
+	transform: scale(0.96);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1rpx solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.text-hidden {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.button {
+	height: 20px;
+	line-height: 20px;
+	margin: 3px;
+	padding: 2px 12px 2px 12px;
+	background-color: lightgray;
+	border-radius: var(--item-radius);
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}

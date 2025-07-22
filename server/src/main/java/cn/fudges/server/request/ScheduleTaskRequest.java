@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import cn.fudges.server.common.request.RequestEntity;
-import cn.fudges.server.entity.bo.TimeCron;
 import cn.fudges.server.enums.ScheduleTaskBusinessType;
-import cn.hutool.cron.task.Task;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -53,7 +51,10 @@ public class ScheduleTaskRequest extends RequestEntity implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    private TimeCron timeCron;
+    /**
+     * 状态，0-开启，1-关闭
+     */
+    private Integer status;
 
     private ScheduleTaskBusinessType businessType;
 }

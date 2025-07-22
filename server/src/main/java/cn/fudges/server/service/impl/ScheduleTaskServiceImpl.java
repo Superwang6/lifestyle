@@ -11,15 +11,23 @@ import cn.fudges.server.service.ScheduleRecordService;
 import cn.fudges.server.service.ScheduleTaskService;
 import cn.fudges.server.service.processor.ScheduleTaskProcessor;
 import cn.fudges.server.utils.AssertUtils;
+import cn.fudges.server.utils.CronValidator;
+import cn.fudges.server.utils.MdcTaskDecorator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.cron.CronUtil;
+import cn.hutool.cron.Scheduler;
 import cn.hutool.cron.task.Task;
+import cn.hutool.setting.Setting;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -30,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * <p>
@@ -62,24 +71,10 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
             PROCESSOR_MAP.put(processor.getScheduleTaskBusinessType().getCode(), processor);
         }
 
-        List<ScheduleTask> list = list();
-        List<Long> triggerTimesIdList = new ArrayList<>();
+        LambdaQueryWrapper<ScheduleTask> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ScheduleTask::getStatus, 0);
+        List<ScheduleTask> list = list(queryWrapper);
         for (ScheduleTask scheduleTask : list) {
-            if (ObjectUtil.isNotNull(scheduleTask.getTriggerTimes()) && scheduleTask.getTriggerTimes() > 0) {
-                triggerTimesIdList.add(scheduleTask.getId());
-            }
-        }
-        Map<Long, Integer> timesMap = null;
-        if (CollUtil.isNotEmpty(triggerTimesIdList)) {
-            timesMap = scheduleRecordService.queryTriggerTimesByTaskIdList(triggerTimesIdList);
-        }
-        for (ScheduleTask scheduleTask : list) {
-            if (ObjectUtil.isNotNull(scheduleTask.getTriggerTimes()) && scheduleTask.getTriggerTimes() > 0
-                    && ObjectUtil.isNotNull(timesMap) && timesMap.containsKey(scheduleTask.getId())
-                    && scheduleTask.getTriggerTimes() >= timesMap.get(scheduleTask.getId())) {
-                // 如果触发次数已经达到，则跳过不启动定时任务
-                continue;
-            }
             CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + scheduleTask.getId());
             CronUtil.schedule(SCHEDULE_TASK_ID_PREFIX + scheduleTask.getId(), scheduleTask.getCron(), executeSchedule(scheduleTask.getId()));
         }
@@ -91,31 +86,37 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
     @Override
     public Long saveScheduleTask(ScheduleTaskRequest request) {
         AssertUtils.isNotNull(request, ResultCodeEnum.PARAM_ERROR);
-        AssertUtils.isNotNull(request.getTimeCron(), ResultCodeEnum.PARAM_ERROR);
+        AssertUtils.isNotNull(request.getCron(), ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotNull(request.getName(), ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotNull(request.getUserId(), ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotNull(request.getBusinessType(), ResultCodeEnum.PARAM_ERROR);
 
-        String cron = request.getTimeCron().toCron();
+        AssertUtils.isTrue(CronValidator.isValid(request.getCron()), ResultCodeEnum.PARAM_ERROR, "cron表达式非法！");
+
         ScheduleTask scheduleTask = new ScheduleTask();
-        scheduleTask.setCron(cron);
+        scheduleTask.setCron(request.getCron());
         scheduleTask.setName(request.getName());
         scheduleTask.setUserId(request.getUserId());
         scheduleTask.setModifyTime(LocalDateTime.now());
         scheduleTask.setBusinessType(request.getBusinessType().getCode());
-        scheduleTask.setTriggerTimes(request.getTimeCron().getTriggerTimes());
+        scheduleTask.setTriggerTimes(request.getTriggerTimes());
         if (ObjectUtil.isNotNull(request.getId())) {
             ScheduleTask oldTask = getById(request.getId());
-            AssertUtils.isTrue(oldTask.getUserId().equals(request.getUserId()), ResultCodeEnum.PERMISSION_DENIED);
+            if(ObjectUtil.isNotNull(oldTask)) {
+                AssertUtils.isTrue(oldTask.getUserId().equals(request.getUserId()), ResultCodeEnum.PERMISSION_DENIED);
 
-            scheduleTask.setId(oldTask.getId());
-            updateById(scheduleTask);
-            CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + oldTask.getId());
+                scheduleTask.setId(oldTask.getId());
+                updateById(scheduleTask);
+                CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + oldTask.getId());
+            } else {
+                scheduleTask.setCreateTime(LocalDateTime.now());
+                save(scheduleTask);
+            }
         } else {
             scheduleTask.setCreateTime(LocalDateTime.now());
             save(scheduleTask);
         }
-        CronUtil.schedule(SCHEDULE_TASK_ID_PREFIX + scheduleTask.getId(), cron, executeSchedule(scheduleTask.getId()));
+        CronUtil.schedule(SCHEDULE_TASK_ID_PREFIX + scheduleTask.getId(), request.getCron(), executeSchedule(scheduleTask.getId()));
 
         return scheduleTask.getId();
     }
@@ -123,39 +124,55 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
     private Task executeSchedule(Long taskId) {
         AssertUtils.isNotNull(taskId, ResultCodeEnum.PARAM_ERROR);
         return () -> {
-            ScheduleTask scheduleTask = getById(taskId);
-            ScheduleRecord scheduleRecord = new ScheduleRecord();
-            // 次数是否耗尽
-            boolean timesExhaustion = false;
             try {
-                if (ObjectUtil.isNotNull(scheduleTask.getTriggerTimes()) && scheduleTask.getTriggerTimes() > 0) {
-                    Map<Long, Integer> timesMap = scheduleRecordService.queryTriggerTimesByTaskIdList(List.of(taskId));
-                    if (ObjectUtil.isNotNull(timesMap) && ObjectUtil.isNotNull(timesMap.get(taskId))
-                            && scheduleTask.getTriggerTimes() < timesMap.get(taskId)) {
-                        timesExhaustion = true;
+                MDC.put("traceId", IdUtil.fastSimpleUUID());
+                log.info("执行定时任务：taskId:{}", taskId);
+                ScheduleTask scheduleTask = getById(taskId);
+                if(ObjectUtil.isNotNull(scheduleTask)) {
+                    // 次数是否耗尽
+                    boolean timesExhaustion = false;
+                    if (ObjectUtil.isNotNull(scheduleTask.getTriggerTimes()) && scheduleTask.getTriggerTimes() > 0) {
+                        Map<Long, Integer> timesMap = scheduleRecordService.queryTriggerTimesByTaskIdList(List.of(taskId));
+                        if (ObjectUtil.isNotNull(timesMap) && ObjectUtil.isNotNull(timesMap.get(taskId))
+                                && scheduleTask.getTriggerTimes() <= timesMap.get(taskId)) {
+                            timesExhaustion = true;
+                        }
                     }
-                }
-                ScheduleTaskProcessor processor = PROCESSOR_MAP.get(scheduleTask.getBusinessType());
-                if(ObjectUtil.isNotNull(processor)) {
-                    processor.scheduleTaskExecute(scheduleTask.getId(), Dict.create().set("timesExhaustion", timesExhaustion));
-                    scheduleRecord.setResult(0);
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                scheduleRecord.setResult(1);
-            } finally {
-                scheduleRecord.setScheduleTaskId(scheduleTask.getId());
-                scheduleRecord.setUserId(scheduleTask.getUserId());
-                scheduleRecord.setCreateTime(LocalDateTime.now());
-                scheduleRecord.setBusinessType(scheduleTask.getBusinessType());
-                scheduleRecordService.save(scheduleRecord);
+                    if(!timesExhaustion) {
+                        ScheduleRecord scheduleRecord = new ScheduleRecord();
+                        try {
+                            ScheduleTaskProcessor processor = PROCESSOR_MAP.get(scheduleTask.getBusinessType());
+                            if(ObjectUtil.isNotNull(processor)) {
+                                processor.scheduleTaskExecute(scheduleTask.getId(), Dict.create().set("timesExhaustion", timesExhaustion));
+                                scheduleRecord.setResult(0);
+                            }
+                        } catch (Exception e) {
+                            log.error(e.getMessage(), e);
+                            scheduleRecord.setResult(1);
+                        } finally {
+                            scheduleRecord.setScheduleTaskId(scheduleTask.getId());
+                            scheduleRecord.setUserId(scheduleTask.getUserId());
+                            scheduleRecord.setCreateTime(LocalDateTime.now());
+                            scheduleRecord.setBusinessType(scheduleTask.getBusinessType());
+                            scheduleRecordService.save(scheduleRecord);
+                        }
+                    } else {
+                        // 如果触发次数已经达到，则停止定时任务
+                        log.info("触发次数到达上限，移除定时任务：taskId:{}", taskId);
+                        CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + taskId);
 
-
-                // 如果触发次数已经达到，则停止定时任务
-                if(timesExhaustion) {
-                    log.info("触发次数到达上限，移除定时任务：taskId:{}", taskId);
+                        ScheduleTask update = new ScheduleTask();
+                        update.setId(taskId);
+                        update.setModifyTime(LocalDateTime.now());
+                        update.setStatus(1);
+                        updateById(update);
+                    }
+                } else {
+                    log.info("任务id不存在，移除定时任务：taskId:{}", taskId);
                     CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + taskId);
                 }
+            } finally {
+                MDC.clear();
             }
         };
     }
@@ -171,7 +188,9 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
 
         scheduleRecordService.removeByTaskId(scheduleTaskId);
 
-        log.info("移除定时任务：taskId:{}", scheduleTaskId);
-        CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + scheduleTaskId);
+        boolean remove = CronUtil.remove(SCHEDULE_TASK_ID_PREFIX + scheduleTaskId);
+        if(remove) {
+            log.info("移除定时任务：taskId:{}", scheduleTaskId);
+        }
     }
 }

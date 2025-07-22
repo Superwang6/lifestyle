@@ -3,34 +3,37 @@
 		<template #header>
 			筛选
 		</template>
-		<uni-forms label-position="top" :modelValue="jotRequest">
-			<uni-forms-item name="book" label="备忘本">
-				<uni-data-select v-model="jotRequest.bookId" :localdata="bookData" :clear="false" @change="changeBook"></uni-data-select>
-			</uni-forms-item>
-			<uni-forms-item name="time" label="时间">
-				<view class="time">
-					<view class="time-item" :style="jotRequest.timeType == 4 ? chooseTimeStyle: ''" @click="chooseTime(4)">历史</view>
-					<view class="time-item" :style="jotRequest.timeType == 0 ? chooseTimeStyle: ''" @click="chooseTime(0)">当日</view>
-					<view class="time-item" :style="jotRequest.timeType == 3 ? chooseTimeStyle: ''" @click="chooseTime(3)">将来</view>
-					<view class="time-item" :style="jotRequest.timeType == 1 ? chooseTimeStyle: ''" @click="chooseTime(1)">近三天</view>
-					<view class="time-item" :style="jotRequest.timeType == 2 ? chooseTimeStyle: ''" @click="chooseTime(2)">近七天</view>
-				</view>
-			</uni-forms-item>
-			<uni-forms-item name="classify" label="分类">
-				<view class="classify">
-					<template v-for="(item, index) in classifyList">
-						<view :style="jotRequest.classifyId == item.id ? chooseStyle : ''" class="classify-item"
-							@click="chooseClassify(item.id)">{{item.name}}</view>
-					</template>
-				</view>
-			</uni-forms-item>
-			<uni-forms-item name="status" label="状态">
-				<uni-data-checkbox mode='tag' :multiple='false' v-model="jotRequest.status" :localdata="statusList"
-					:map="{text:'name',value:'status'}" selected-color="#A6E22E"></uni-data-checkbox>
-			</uni-forms-item>
-		</uni-forms>
+		<scroll-view class="filter-content" scroll-y :show-scrollbar="false">
+			<uni-forms label-position="top" :modelValue="jotRequest">
+				<uni-forms-item name="book" label="备忘本">
+					<uni-data-select v-model="jotRequest.bookId" :localdata="bookData" :clear="false" @change="changeBook"></uni-data-select>
+				</uni-forms-item>
+				<uni-forms-item name="status" label="状态">
+					<view class="flex-row">
+						<template v-for="item in statusList">
+							<view class="button" :class="jotRequest.status == item.status ? 'active' : ''" @click="chooseStatus(item.status)">{{item.name}}</view>
+						</template>
+					</view>
+				</uni-forms-item>
+				<uni-forms-item name="time" label="时间">
+					<view class="time">
+						<view class="button" :class="jotRequest.timeType == 4 ? ' active' : ''" @click="chooseTime(4)">历史</view>
+						<view class="button" :class="jotRequest.timeType == 3 ? ' active' : ''" @click="chooseTime(3)">将来</view>
+						<view class="button" :class="jotRequest.timeType == 5 ? ' active' : ''" @click="chooseTime(5)">表达式</view>
+					</view>
+				</uni-forms-item>
+				<uni-forms-item name="classify" label="分类">
+					<view class="classify">
+						<template v-for="(item, index) in classifyList">
+							<view class="button text-hidden" :class="jotRequest.classifyId == item.id ? 'active': ''" 
+								@click="chooseClassify(item.id)">{{item.name}}</view>
+						</template>
+					</view>
+				</uni-forms-item>
+			</uni-forms>
+		</scroll-view>
 		<template #bottom>
-			<view class="confirm-btn" @click="confirm()">确认</view>
+			<view class="btn confirm-btn" @click="confirm()">确认</view>
 		</template>
 	</ls-drawer>
 </template>
@@ -65,13 +68,20 @@
 		},
 		{
 			'status': 1,
-			'name': '已处理'
+			'name': '已完成'
 		},
 		{
-			'status': 2,
-			'name': '已忽略'
+			'status': 3,
+			'name': '已失败'
 		}
 	])
+	const chooseStatus = (status) => {
+		if(jotRequest.value.status == status) {
+			jotRequest.value.status = null
+		} else {
+			jotRequest.value.status = status 
+		}
+	}
 	const classifyList = ref([])
 	const chooseClassify = (classifyId) => {
 		if(jotRequest.value.classifyId == classifyId) {
@@ -85,6 +95,9 @@
 		backgroundColor: 'lightblue'
 	})
 	const confirm = () => {
+		if(jotRequest.value.status == -1) {
+			jotRequest.value.status = undefined
+		}
 		emits('filterParam')
 		uni.setStorageSync('jot_more_filter', jotRequest.value)
 		drawer.value.close()
@@ -138,52 +151,24 @@
 	})
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	.filter-content {
+		height: 100%;
+	}
 	.time {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		
-		.time-item {
-			height: 25px;
-			line-height: 25px;
-			margin: 5px;
-			padding: 3px 15px 3px 15px;
-			background-color: lightgray;
-			border-radius: 10px;
-		}
+		overflow-y: auto;
+		max-height: 20vh;
 	}
 	.classify {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-
-		.classify-item {
-			height: 25px;
-			line-height: 25px;
-			margin: 5px;
-			padding: 3px 15px 3px 15px;
-			background-color: lightgray;
-			border-radius: 10px;
-
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			display: block;
-		}
 	}
-
-	.confirm-btn {
-		background-color: lightgreen;
-		border-radius: 20px;
-		height: 40px;
-		line-height: 40px;
-		text-align: center;
-	}
-
-	.confirm-btn:active {
-		transform: scale(0.96);
-		background-color: lightseagreen;
-		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+	.active {
+		color: #FFFFFF;
+		background-color: lightblue;
 	}
 </style>

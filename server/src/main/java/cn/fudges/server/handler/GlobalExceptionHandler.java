@@ -41,6 +41,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResultResponse<Void> handleException(Exception e) {
         LOGGER.error(e.getMessage(), e);
-        return ResultResponse.fail(ResultCodeEnum.SYSTEM_ERROR.getCode(), e.getMessage(), null);
+        return ResultResponse.fail(ResultCodeEnum.SYSTEM_ERROR.getCode(), ResultCodeEnum.SYSTEM_ERROR.getMessage(), null);
     }
 }

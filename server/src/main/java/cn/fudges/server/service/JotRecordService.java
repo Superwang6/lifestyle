@@ -27,4 +27,5 @@ public interface JotRecordService extends IService<JotRecord> {
 
     void jotRemindJob();
 
+    Boolean modifyStatus(JotRecordRequest request);
 }

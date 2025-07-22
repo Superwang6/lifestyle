@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public enum JotRemindTypeEnum {
     ONCE(0, "单次提醒"),
-    CYCLE(1, "周期提醒");
+    CRON(1, "cron表达式提醒");
 
     private final int code;
     private final String desc;

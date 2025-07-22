@@ -43,7 +43,8 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	@import "@/styles/common.scss";
 	/*每个页面公共css */
 	#app {
 		box-sizing: border-box;

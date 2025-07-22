@@ -8,6 +8,7 @@ import cn.fudges.server.service.processor.ScheduleTaskProcessor;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.cron.task.Task;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,8 @@ public class ScheduleRecordServiceImpl extends ServiceImpl<ScheduleRecordMapper,
 
     @Override
     public void removeByTaskId(Long scheduleTaskId) {
-        remove(lambdaQuery().eq(ScheduleRecord::getScheduleTaskId, scheduleTaskId));
+        LambdaQueryWrapper<ScheduleRecord> queryWrapper = new LambdaQueryWrapper<>();
+        remove(queryWrapper.eq(ScheduleRecord::getScheduleTaskId, scheduleTaskId));
     }
 
     @Override

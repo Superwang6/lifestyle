@@ -67,4 +67,10 @@ public class ScheduleTask implements Serializable {
      */
     @TableField("business_type")
     private Integer businessType;
+
+    /**
+     * 状态，0-开启，1-关闭
+     */
+    @TableField("status")
+    private Integer status;
 }

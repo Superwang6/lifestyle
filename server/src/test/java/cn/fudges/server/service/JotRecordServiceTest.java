@@ -1,7 +1,6 @@
 package cn.fudges.server.service;
 
 import cn.fudges.server.entity.JotRecord;
-import cn.fudges.server.entity.bo.TimeCron;
 import cn.fudges.server.request.JotRecordRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.junit.jupiter.api.Test;
@@ -44,10 +43,6 @@ class JotRecordServiceTest {
         request.setClassifyId(1L);
         request.setStatus(0);
         request.setRemindType(1);
-        TimeCron timeCron = new TimeCron();
-        timeCron.setSecond("10");
-        timeCron.setStepMinute(1);
-        request.setTimeCron(timeCron);
         Boolean b = jotRecordService.addJotRecord(request);
         System.out.println(b);
     }

@@ -46,6 +46,12 @@ public class JotRecordController {
         return ResultResponse.success(jotRecordService.modifyJotRecord(request));
     }
 
+    @PostMapping("/modifyStatus")
+    public ResultResponse<Boolean> modifyStatus(@RequestBody JotRecordRequest request) {
+        request.setUserId(StpUtil.getLoginIdAsLong());
+        return ResultResponse.success(jotRecordService.modifyStatus(request));
+    }
+
     @PostMapping("/delete/{id}")
     public ResultResponse<Boolean> delete(@PathVariable Long id) {
         JotRecordRequest request = new JotRecordRequest();

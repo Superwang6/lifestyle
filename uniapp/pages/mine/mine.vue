@@ -35,9 +35,6 @@
 
 <script setup>
 	import {
-		onShow
-	} from '@dcloudio/uni-app'
-	import {
 		onMounted,
 		ref
 	} from 'vue';

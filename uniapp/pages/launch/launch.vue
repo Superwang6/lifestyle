@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="content">
 		正在加载。。。
 	</view>
 </template>
@@ -17,6 +17,8 @@
 	})
 </script>
 
-<style>
-
+<style lang="scss">
+.content {
+	background-color: lightsteelblue;
+}
 </style>

@@ -3,7 +3,7 @@
 		<template #header>
 			备忘本
 		</template>
-		<view>
+		<scroll-view class="filter-content" scroll-y :show-scrollbar="false">
 			<uni-collapse accordion>
 				<template v-for="item in bookList">
 					<uni-collapse-item>
@@ -23,15 +23,15 @@
 								</uni-swipe-action-item>
 							</template>
 						</uni-swipe-action>
-						<view class="add-classify-btn" @click="openClassDialog(item.id)">
-							<uni-icons class="icon-classify" type="plusempty" size="24"></uni-icons>
+						<view class="add-classify-btn btn" @click="openClassDialog(item.id)">
+							<uni-icons class="icon-classify" type="plusempty" size="16"></uni-icons>
 						</view>
 					</uni-collapse-item>
 				</template>
 			</uni-collapse>
-		</view>
+		</scroll-view>
 		<template #bottom>
-			<view class="add-book-btn" @click="saveBookClick()">添加备忘本</view>
+			<view class="add-book-btn btn" @click="saveBookClick()">添加备忘本</view>
 		</template>
 	</ls-drawer>
 	<ls-dialog ref="dialog" title="保存分类" @confirm="confirmClassify ">
@@ -191,72 +191,54 @@
 </script>
 
 <style lang="scss">
-	.collapse-title {
-		font-size: 15px;
-		padding: 8px 0 8px 10px;
-		height: 30px;
-	}
-
-	.swipe-1 {
-		height: 40px;
-		line-height: 40px;
-		color: white;
-		background: lightblue;
-		padding: 0 15px;
-	}
-
-	.swipe-2 {
-		height: 40px;
-		line-height: 40px;
-		color: white;
-		background: lightcoral;
-		padding: 0 15px;
-	}
-
-	.list-item {
-		height: 40px;
-		line-height: 40px;
-		font-size: 15px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		display: block;
-		padding-left: 20px;
-
-		border-bottom: 1px solid lightgrey;
-	}
-
-	.add-classify-btn {
-		background-color: lightblue;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		border-radius: 20px;
-		margin: 5px 20px 5px 20px;
-
-		.icon-classify {
-			margin: 5px;
+	.filter-content {
+		height: 100vh;
+		
+		.collapse-title {
+			font-size: var(--font-size);
+			padding: 8px 0 8px 10px;
+			height: 30px;
+		}
+		
+		.swipe-1 {
+			height: 40px;
+			line-height: 40px;
+			color: var(--reverse-text-color);
+			background: lightblue;
+			padding: 0 15px;
+		}
+		
+		.swipe-2 {
+			height: 40px;
+			line-height: 40px;
+			color: var(--reverse-text-color);
+			background: lightcoral;
+			padding: 0 15px;
+		}
+		
+		.list-item {
+			height: 40px;
+			line-height: 40px;
+			font-size: var(--font-size);
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			display: block;
+			padding-left: 20px;
+		
+		}
+		
+		.add-classify-btn {
+			background-color: lightblue;
+			width: 60%;
+			margin-left: 20px;
 		}
 	}
-
-	.add-book-btn {
-		background-color: lightgreen;
-		border-radius: 20px;
-		height: 40px;
-		line-height: 40px;
-		text-align: center;
-	}
-
-	.add-book-btn:active {
-		transform: scale(0.96);
-		background-color: lightseagreen;
-		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-	}
-
+	
 	.book-form {
 		display: flex;
 		flex-direction: column;
-
+	
 		.book-form-item {
 			margin: 5px 0 5px 0;
 		}

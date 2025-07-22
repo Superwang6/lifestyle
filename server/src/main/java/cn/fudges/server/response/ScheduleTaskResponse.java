@@ -46,4 +46,9 @@ public class ScheduleTaskResponse implements Serializable {
      * 修改时间
      */
     private LocalDateTime modifyTime;
+
+    /**
+     * 状态，0-开启，1-关闭
+     */
+    private Integer status;
 }
