@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class ResultResponse<T> implements Serializable {
 
-    private String code = "00000";
+    private String code = ResultCodeEnum.SUCCESS.getCode();
 
-    private String message = "success";
+    private String message = ResultCodeEnum.SUCCESS.getMessage();
 
     private T data;
 
@@ -39,7 +39,7 @@ public class ResultResponse<T> implements Serializable {
     }
 
     public boolean whetherSuccess() {
-        return "00000".equals(this.code);
+        return ResultCodeEnum.SUCCESS.getCode().equals(this.code);
     }
 
     public static <T> ResultResponse<T> success(T data) {

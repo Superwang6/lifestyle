@@ -3,7 +3,7 @@
 		@clickLeft="back" @clickRight="saveUserInfo"></uni-nav-bar>
 	<view class="content">
 		<view class="avatar" @click="openPhoto">
-			<image class="img" :src="settingsStore.filePrefix + user.imgUrl"></image>
+			<image class="img" :src="user.imgUrl ? settingsStore.filePrefix + user.imgUrl : '/static/logo.png'"></image>
 			<uni-icons class="icon" type="camera-filled" size="23"></uni-icons>
 		</view>
 		<view class="base-info">
@@ -149,12 +149,13 @@
 
 		.avatar {
 			position: relative;
-
+			
 			.img {
 				position: relative;
 				width: 200rpx;
 				height: 200rpx;
 				border-radius: 100rpx;
+				border: 3px white solid;
 			}
 
 			.icon {
@@ -163,8 +164,8 @@
 				padding: 5rpx;
 				background-color: var(--primary-color);
 				border-radius: 35rpx;
-				left: calc(200rpx - 62rpx);
-				top: calc(200rpx - 62rpx);
+				left: calc(200rpx - 61rpx);
+				top: calc(200rpx - 61rpx);
 			}
 		}
 

@@ -81,7 +81,6 @@
 				"password": crypto.MD5(res.password).toString(),
 				"length": res.password.length
 			}
-			return
 			post("/register/userPassword", request, (data) => {
 				uni.showToast({
 					title: "注册成功！",
@@ -89,8 +88,8 @@
 				})
 				uni.navigateTo({
 					url: '/pages/login/login',
-					success: (res) => {
-						res.eventChannel.emit('registerToLogin', {
+					success: (loginRes) => {
+						loginRes.eventChannel.emit('registerToLogin', {
 							mobilePhone: res.mobilePhone,
 							password: res.password
 						})

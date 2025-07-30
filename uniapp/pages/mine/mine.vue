@@ -2,7 +2,7 @@
 	<view class="main-contenter">
 		<view class="header">
 			<view class="user-info" @click="openUserInfo">
-				<image class="left" :src="settingsStore.filePrefix + userInfo.imgUrl" @click.stop="openImg(userInfo.imgUrl)"></image>
+				<image class="left" :src="userInfo.imgUrl ? settingsStore.filePrefix + userInfo.imgUrl : '/static/logo.jpg'" @click.stop="openImg(userInfo.imgUrl)"></image>
 				<view class="mid">
 					<view class="mid-top">{{userInfo.name}}</view>
 					<view class="mid-bottom">手机号：{{userInfo.mobilePhone}}</view>

@@ -35,6 +35,7 @@ export function uploadFile(businessName, path, successCallback, failCallback) {
 			'businessName': businessName
 		}, 
 		success(res) {
+			res.data = JSON.parse(res.data)
 			response(res, successCallback, failCallback)
 		}, 
 		fail() {
@@ -51,8 +52,9 @@ export function uploadFileBase64(businessName, base64, successCallback, failCall
 }
 
 function response(res, successCallback, failCallback) {
+	console.log(res);
 	if(res.statusCode == 200) {
-		if(res.data.code == "00000") {
+		if(res.data.code == "0000") {
 			successCallback(res.data)
 		} else if (res.data.code == "1001") {
 			uni.removeStorageSync('userInfo');

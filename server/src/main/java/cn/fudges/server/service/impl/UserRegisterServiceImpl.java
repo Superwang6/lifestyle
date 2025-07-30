@@ -10,6 +10,7 @@ import cn.fudges.server.service.UserPasswordService;
 import cn.fudges.server.utils.AssertUtils;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         AssertUtils.isNull(userBase, ResultCodeEnum.PARAM_ERROR, "手机号码已经存在");
 
         UserBase user = BeanUtil.copyProperties(request, UserBase.class);
+        user.setName("U_" + RandomUtil.randomString(8));
         user.setCreateTime(LocalDateTime.now());
         user.setModifyTime(LocalDateTime.now());
         userBaseService.save(user);
@@ -50,6 +52,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         UserPassword userPassword = BeanUtil.copyProperties(request, UserPassword.class);
         userPassword.setUserId(user.getId());
         userPassword.setSalt(RandomUtil.randomString(10));
+        userPassword.setPassword(DigestUtil.md5Hex(userPassword.getPassword() + userPassword.getSalt()));
         userPasswordService.save(userPassword);
         return user;
     }
