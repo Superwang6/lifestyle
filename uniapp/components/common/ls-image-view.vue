@@ -9,15 +9,12 @@
 
 <script setup>
 	import { ref } from 'vue';
-	import { useSettingsStore } from '@/stores/settings-store';
-	
-	const settingsStore = useSettingsStore()
 	
 	const popup = ref(null)
 	const url = ref(null)
 	
 	const openImg = (imgUrl) => {
-		url.value = settingsStore.filePrefix + imgUrl
+		url.value = imgUrl
 		popup.value.open()
 	}
 	const closeImg = () => {
@@ -40,7 +37,7 @@
 		.close {
 			position: absolute;
 			right: 40rpx;
-			top: 40rpx;
+			top: calc(var(--status-bar-height) + 40rpx);
 			background-color: var(--light-bg-color);
 			border-radius: 40rpx;
 			padding: 4rpx;

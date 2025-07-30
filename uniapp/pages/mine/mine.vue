@@ -2,7 +2,7 @@
 	<view class="main-contenter">
 		<view class="header">
 			<view class="user-info" @click="openUserInfo">
-				<image class="left" :src="userInfo.imgUrl ? settingsStore.filePrefix + userInfo.imgUrl : '/static/logo.jpg'" @click.stop="openImg(userInfo.imgUrl)"></image>
+				<image class="left" :src="imgUrl" @click.stop="openImg(imgUrl)"></image>
 				<view class="mid">
 					<view class="mid-top">{{userInfo.name}}</view>
 					<view class="mid-bottom">手机号：{{userInfo.mobilePhone}}</view>
@@ -37,6 +37,7 @@
 
 <script setup>
 	import {
+		computed,
 		onMounted,
 		ref
 	} from 'vue';
@@ -59,6 +60,9 @@
 	}
 	
 	const imgView = ref(null)
+	const imgUrl = computed(() => {
+		return userInfo.imgUrl ? settingsStore.filePrefix + userInfo.imgUrl : '/static/logo.jpg'
+	})
 	const openImg = (imgUrl) => {
 		imgView.value.openImg(imgUrl)
 	}
