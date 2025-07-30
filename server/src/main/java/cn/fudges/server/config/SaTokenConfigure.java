@@ -1,10 +1,15 @@
 package cn.fudges.server.config;
 
+import cn.dev33.satoken.dao.SaTokenDao;
+import cn.dev33.satoken.dao.SaTokenDaoForRedisson;
 import cn.dev33.satoken.fun.strategy.SaCorsHandleFunction;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaHttpMethod;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.fudges.server.config.properties.ProjectConfigProperties;
+import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,14 +20,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @since 2025/5/24
  */
 @Configuration
+@RequiredArgsConstructor
 public class SaTokenConfigure implements WebMvcConfigurer {
+
+    private final ProjectConfigProperties projectConfigProperties;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        String[] excludeArray = new String[] {
+                "/error",
+                projectConfigProperties.getFile().getPrePath() + "/**"
+        };
+
         // 注册 Sa-Token 拦截器，打开注解式鉴权功能
         registry.addInterceptor(new SaInterceptor(handler -> StpUtil.checkLogin()))
                 .addPathPatterns("/**")
-                .excludePathPatterns("/error");
+                .excludePathPatterns(excludeArray);
     }
 
     /**
@@ -44,5 +57,10 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                     .free(r -> System.out.println("--------OPTIONS预检请求，不做处理"))
                     .back();
         };
+    }
+
+    @Bean
+    public SaTokenDao saTokenDao(RedissonClient redissonClient) {
+        return new SaTokenDaoForRedisson(redissonClient);
     }
 }

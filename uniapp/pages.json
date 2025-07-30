@@ -1,6 +1,5 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/launch/launch"
 		},
 		{
@@ -10,16 +9,29 @@
 			"path": "pages/jot/jot"
 		},
 		{
-			"path" : "pages/mine/mine"
+			"path": "pages/mine/mine"
 		},
 		{
-			"path" : "pages/login/login"
+			"path": "pages/login/login"
 		},
 		{
 			"path": "pages/jot/jot-add"
 		},
 		{
 			"path": "pages/settings/settings"
+		},
+		{
+			"path": "pages/register/register"
+		},
+		{
+			"path": "pages/mine/user-info"
+		},
+		{
+			"path": "pages/image/image-copper",
+			"style": {
+				"enablePullDownRefresh": false,
+				"disableScroll": true
+			}
 		}
 	],
 	"globalStyle": {
@@ -35,8 +47,7 @@
 		"selectedColor": "#3cc51f",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/index/index",
 				"text": "首页"
 			},

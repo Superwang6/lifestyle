@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import cn.fudges.server.common.request.RequestEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,6 +25,27 @@ public class UserBaseRequest extends RequestEntity implements Serializable {
      * 名称
      */
     private String name;
+
+    /**
+     * 头像图片地址
+     */
+    private String imgUrl;
+
+    /**
+     * 生日
+     */
+    private LocalDateTime birthday;
+
+    /**
+     * 性别，0-未知，1-男，2-女
+     */
+    private Byte sex;
+
+    /**
+     * 签名
+     */
+    private String sign;
+
 
     /**
      * 手机号

@@ -42,4 +42,6 @@ public class UserPasswordRequest extends RequestEntity implements Serializable {
     private String mobilePhone;
 
     private String uniPushCid;
+
+    private String oldPassword;
 }

@@ -5,25 +5,18 @@ import cn.fudges.server.common.result.ResultCodeEnum;
 import cn.fudges.server.entity.ScheduleRecord;
 import cn.fudges.server.entity.ScheduleTask;
 import cn.fudges.server.mapper.ScheduleTaskMapper;
-import cn.fudges.server.request.ScheduleRecordRequest;
 import cn.fudges.server.request.ScheduleTaskRequest;
 import cn.fudges.server.service.ScheduleRecordService;
 import cn.fudges.server.service.ScheduleTaskService;
 import cn.fudges.server.service.processor.ScheduleTaskProcessor;
 import cn.fudges.server.utils.AssertUtils;
-import cn.fudges.server.utils.CronValidator;
-import cn.fudges.server.utils.MdcTaskDecorator;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.fudges.server.utils.CronUtils;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.cron.CronUtil;
-import cn.hutool.cron.Scheduler;
 import cn.hutool.cron.task.Task;
-import cn.hutool.setting.Setting;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * <p>
@@ -91,7 +82,7 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
         AssertUtils.isNotNull(request.getUserId(), ResultCodeEnum.PARAM_ERROR);
         AssertUtils.isNotNull(request.getBusinessType(), ResultCodeEnum.PARAM_ERROR);
 
-        AssertUtils.isTrue(CronValidator.isValid(request.getCron()), ResultCodeEnum.PARAM_ERROR, "cron表达式非法！");
+        AssertUtils.isTrue(CronUtils.isValid(request.getCron()), ResultCodeEnum.PARAM_ERROR, "cron表达式非法！");
 
         ScheduleTask scheduleTask = new ScheduleTask();
         scheduleTask.setCron(request.getCron());

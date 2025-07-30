@@ -3,6 +3,7 @@ package cn.fudges.server.response;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @author 王平远
@@ -24,6 +25,14 @@ public class UserLoginResponse implements Serializable {
      * 手机号
      */
     private String mobilePhone;
+
+    private String imgUrl;
+
+    private LocalDateTime birthday;
+
+    private Integer sex;
+
+    private String sign;
 
     private Integer passwordLength;
 

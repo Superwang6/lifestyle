@@ -3,6 +3,7 @@ package cn.fudges.server.response;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 /**
@@ -28,22 +29,27 @@ public class UserBaseResponse implements Serializable {
     private String mobilePhone;
 
     /**
-     * uni-push2的client id
+     * 头像图片地址
      */
-    private String uniPushCid;
+    private String imgUrl;
 
     /**
-     * 创建时间
+     * 生日
      */
-    private LocalDateTime createTime;
+    private LocalDateTime birthday;
 
     /**
-     * 修改时间
+     * 性别，0-未知，1-男，2-女
      */
-    private LocalDateTime modifyTime;
+    private Byte sex;
 
     /**
-     * 是否删除，0-否，1-是
+     * 签名
      */
-    private Integer isRemove;
+    private String sign;
+
+//    /**
+//     * uni-push2的client id
+//     */
+//    private String uniPushCid;
 }

@@ -15,10 +15,12 @@ app.$mount()
 // #ifdef VUE3
 import { createSSRApp } from 'vue'
 import * as Pinia from 'pinia';
+import lsMessage from '@/components/common/ls-message.vue'
 
 export function createApp() {
   const app = createSSRApp(App)
   app.use(Pinia.createPinia())
+  app.component('ls-message', lsMessage)
   return {
     app,
 	Pinia

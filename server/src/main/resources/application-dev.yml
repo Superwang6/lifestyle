@@ -18,3 +18,22 @@ spring:
       test-on-return: false
       pool-prepared-statements: true
       max-pool-prepared-statement-per-connection-size: 20
+
+  data:
+    redis:
+      port: 6699
+      host: local.fudges.cn
+      password: fudges
+      timeout: 1000
+      database: 10
+      redisson:
+        connect-timeout: 1000
+        connection-pool-size: 80
+
+project:
+  domain: http://192.168.74.58:${server.port}
+  file:
+    pre-path: /uploads
+    upload-dir: ${user.dir}/uploads
+    auth-exclude:
+      - ${project.file.pre-path}/userAvatar/**

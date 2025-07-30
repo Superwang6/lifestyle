@@ -13,34 +13,65 @@ export function post(url, req, successCallback, failCallback, completeCallback) 
 			'satoken': uni.getStorageSync('satoken')
 		},
 		success: (res) => {
-			if(res.statusCode == 200) {
-				if(res.data.code == "00000") {
-					successCallback(res.data)
-				} else if (res.data.code == "1001") {
-					uni.removeStorageSync('userInfo');
-					toLoginPage()
-				} else {
-					if(failCallback) {
-						failCallback(res.data)
-					} else {
-						console.log("failCallback:" + JSON.stringify(res.data));
-						uni.showToast({
-							icon: "none",
-							title: res.data.message
-						})
-					}
-				}
-			} else {
-				console.log("fail,statusCode:" + res.statusCode);
-				uni.showToast({
-					icon: "error",
-					title: '服务繁忙！'
-				})
-			}
+			response(res, successCallback, failCallback)
 		},
 		fail: (res) => {
-			console.log(res)
+			uni.showToast({
+				icon: "error",
+				title: '服务繁忙！'
+			})
 		},
 		complete: completeCallback
 	})
+}
+
+export function uploadFile(businessName, path, successCallback, failCallback) {
+	uni.uploadFile({
+		url: host + '/file/upload',
+		filePath: path,
+		name: 'files',
+		timeout: 10000,
+		formData: {
+			'businessName': businessName
+		}, 
+		success(res) {
+			response(res, successCallback, failCallback)
+		}, 
+		fail() {
+			failCallback()
+		}
+	})
+}
+export function uploadFileBase64(businessName, base64, successCallback, failCallback) {
+	const request = {
+		'businessName': businessName,
+		'base64': base64
+	}
+	post('/file/upload/base64', request, successCallback, failCallback)
+}
+
+function response(res, successCallback, failCallback) {
+	if(res.statusCode == 200) {
+		if(res.data.code == "00000") {
+			successCallback(res.data)
+		} else if (res.data.code == "1001") {
+			uni.removeStorageSync('userInfo');
+			toLoginPage()
+		} else {
+			if(failCallback) {
+				failCallback(res.data)
+			} else {
+				console.log("failCallback:" + JSON.stringify(res.data));
+				uni.showToast({
+					icon: "none",
+					title: res.data.message
+				})
+			}
+		}
+	} else {
+		uni.showToast({
+			icon: "error",
+			title: '服务繁忙！'
+		})
+	}
 }

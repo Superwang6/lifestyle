@@ -50,8 +50,12 @@ public class ResultResponse<T> implements Serializable {
         return new ResultResponse<>(BeanUtil.copyToList(data.getRecords(), tClass), data.getTotal());
     }
 
-    public static <T> ResultResponse<T> success(T data, Class<T> tClass) {
+    public static <T,V> ResultResponse<V> success(T data, Class<V> tClass) {
         return new ResultResponse<>(BeanUtil.copyProperties(data, tClass));
+    }
+
+    public static <T> ResultResponse<T> fail(String code, String message) {
+        return new ResultResponse<>(code, message, null);
     }
 
     public static <T> ResultResponse<T> fail(String code, String message, T data) {

@@ -22,6 +22,7 @@
         <velocity.version>2.4.1</velocity.version>
         <druid.version>1.2.24</druid.version>
         <lombok.version>1.18.34</lombok.version>
+        <redisson.version>3.50.0</redisson.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -70,6 +71,16 @@
             <version>${sa-token.version}</version>
         </dependency>
         <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redisson</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-fastjson</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
@@ -95,6 +106,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -107,6 +124,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

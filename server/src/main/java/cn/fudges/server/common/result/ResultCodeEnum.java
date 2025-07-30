@@ -13,6 +13,7 @@ public enum ResultCodeEnum implements IResultCodeEnum {
     PARAM_ERROR("1002", "参数错误"),
     PERMISSION_DENIED("1003", "权限不足"),
     ACCOUNT_PASSWORD_ERROR("1004", "账号或密码错误"),
+    NOT_FOUND("1005", "资源不存在"),
     SYSTEM_ERROR("9999", "服务繁忙，请稍后再试！"),
     ;
 

@@ -1,6 +1,9 @@
 package cn.fudges.server.service;
 
 import cn.fudges.server.entity.UserBase;
+import cn.fudges.server.request.UserBaseRequest;
+import cn.fudges.server.request.UserPasswordRegisterRequest;
+import cn.fudges.server.response.UserBaseResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -14,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserBaseService extends IService<UserBase> {
 
     UserBase detail(Integer id);
+
+    Boolean modifyUserBase(UserBaseRequest request);
 }

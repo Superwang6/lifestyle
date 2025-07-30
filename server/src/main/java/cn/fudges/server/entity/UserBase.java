@@ -33,6 +33,30 @@ public class UserBase implements Serializable {
     private String name;
 
     /**
+     * 头像图片地址
+     */
+    @TableField("img_url")
+    private String imgUrl;
+
+    /**
+     * 生日
+     */
+    @TableField("birthday")
+    private LocalDateTime birthday;
+
+    /**
+     * 性别，0-未知，1-男，2-女
+     */
+    @TableField("sex")
+    private Byte sex;
+
+    /**
+     * 签名
+     */
+    @TableField("sign")
+    private String sign;
+
+    /**
      * 手机号
      */
     @TableField("mobile_phone")

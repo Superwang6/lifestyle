@@ -15,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserPasswordService extends IService<UserPassword> {
 
-    UserLoginResponse loginByPassword(UserPasswordRequest request);
+    Boolean modifyUserPassword(UserPasswordRequest request);
 }

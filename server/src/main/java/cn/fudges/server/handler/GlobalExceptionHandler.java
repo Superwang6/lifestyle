@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -35,6 +36,12 @@ public class GlobalExceptionHandler {
             resultEnum = ResultCodeEnum.NO_LOGIN;
         }
         return ResultResponse.fail(resultEnum.getCode(), resultEnum.getMessage(), null);
+    }
+
+    // 处理资源异常
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResultResponse<Void> handleNoResourceFoundException() {
+        return ResultResponse.fail(ResultCodeEnum.NOT_FOUND.getCode(), ResultCodeEnum.NOT_FOUND.getMessage(), null);
     }
 
     // 捕获所有其他异常

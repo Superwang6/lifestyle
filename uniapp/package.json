@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "cronstrue": "^3.1.0",
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.13"
   }
 }

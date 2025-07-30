@@ -9,7 +9,8 @@
 				<uni-easyinput v-model="loginReq.password" type="password" placeholder="请输入密码"></uni-easyinput>
 			</uni-forms-item>
 		</uni-forms>
-		<button class="login-btn" @click="login()">登录</button>
+		<view class="btn login-btn" @click="login()">登录</view>
+		<view class="register">没有账号？<span @click="goRegister">去注册</span></view>
 	</view> 
 </template>
 
@@ -18,7 +19,9 @@
 		post
 	} from '@/utils/request';
 	import {
-		ref
+		ref,
+		onMounted,
+		getCurrentInstance
 	} from 'vue'
 	import crypto from 'crypto-js'
 
@@ -60,8 +63,9 @@
 					icon: 'none'
 				})
 				uni.setStorageSync('satoken', data.data.token)
-				uni.setStorageSync('userInfo', data.data)
-				console.log(data.data);
+				post('/userBase/detail/' + data.data.id, {} ,(data) => {
+					uni.setStorageSync('userInfo', data.data)
+				})
 				uni.switchTab({
 					url: '/pages/index/index'
 				});
@@ -70,11 +74,26 @@
 		}).catch(() => {
 		})
 	}
+	
+	const goRegister = () => {
+		uni.navigateTo({
+			url: '/pages/register/register'
+		})
+	}
+	
+	onMounted(() => {
+		const instance = getCurrentInstance().proxy
+		const eventChannel = instance.getOpenerEventChannel();
+		eventChannel.on('registerToLogin', (data) => {
+			loginReq.value.mobilePhone = data.mobilePhone
+			loginReq.value.password = data.password
+		})
+	})
 </script>
 
 <style lang="scss">
 	.main-container {
-		margin: 10px;
+		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -92,10 +111,18 @@
 
 		.login-btn {
 			width: 70%;
-			margin-top: 40px;
-			background-color: lightblue;
-			border: 0;
-			border-radius: 20px;
+			margin-top: 20px;
+		}
+		
+		.register {
+			font-size: var(--font-size-sm);
+			color: var(--light-text-color);
+			margin-top: 20px;
+			
+			span {
+				font-weight: bold;
+				color: skyblue
+			}
 		}
 	}
 </style>

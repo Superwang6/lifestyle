@@ -10,6 +10,8 @@ import java.io.IOException;
 /**
  * @author 王平远
  * @since 2025/6/27
+ * 跟踪号过滤器，用于请求进来后生成唯一的跟踪号
+ *
  */
 @Component
 public class LogTraceFilter implements Filter {

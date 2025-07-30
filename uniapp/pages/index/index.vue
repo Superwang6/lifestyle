@@ -11,6 +11,9 @@
 			<view class="test">1111</view>
 		</scroll-view>
 	</ls-drawer>
+	<view style="height: 200px;"></view>
+	<button @click="openToast1(222)">222</button>
+	<button @click="openToast2(333)">333</button>
 </template>
 
 <script setup>
@@ -20,6 +23,11 @@
 	const drawer = ref(null)
 	const openDrawer = () => {
 		drawer.value.open()
+	}
+	const toast = ref(null)
+	const openToast1 = (text) => {
+	}
+	const openToast2 = (text) => {
 	}
 </script>
 

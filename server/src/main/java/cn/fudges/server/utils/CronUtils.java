@@ -6,8 +6,7 @@ import cn.hutool.cron.pattern.CronPattern;
  * @author 王平远
  * @since 2025/7/17
  */
-
-public class CronValidator {
+public class CronUtils {
     public static boolean isValid(String cron) {
         try {
             new CronPattern(cron);
