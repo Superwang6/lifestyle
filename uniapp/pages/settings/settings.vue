@@ -28,6 +28,7 @@
 	const logout = () => {
 		uni.removeStorageSync('satoken')
 		uni.removeStorageSync('userInfo')
+		uni.removeStorageSync('jot_more_filter')
 		
 		uni.reLaunch({
 			url: '/pages/login/login'

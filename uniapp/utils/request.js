@@ -1,7 +1,7 @@
 import { toLoginPage } from "@/utils/check-login"
 
-var host = 'http://192.168.74.58:18888'
-// var host = 'http://www.fudges.cn:18888'
+// var host = 'http://192.168.74.58:18888'
+var host = 'http://www.fudges.cn:18888'
 export function post(url, req, successCallback, failCallback, completeCallback) {
 	uni.request({
 		url: host + url,

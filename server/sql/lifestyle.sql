@@ -223,6 +223,8 @@ CREATE TABLE `lifestyle_prod`.`module_info`
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '功能模块' ROW_FORMAT = Dynamic;
 
+INSERT INTO `lifestyle_prod`.`module_info` (`id`, `name`, `sort`, `is_hide`, `unlock_level`, `icon_url`, `web_url`) VALUES (1, '备忘录', 100, 0, 1, '/icon/jot.png', '/pages/jot/jot');
+
 CREATE TABLE `lifestyle_prod`.`sms_record`
 (
     `id`               bigint(20) NOT NULL AUTO_INCREMENT,

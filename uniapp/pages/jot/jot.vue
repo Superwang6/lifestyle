@@ -1,6 +1,6 @@
 <template>
-	<ls-container-nav class="container" title="备忘录" >
-		<z-paging ref="paging" class="zpaging" v-model="list" @query="queryList" :default-page-size="30" :fixed="false">
+	<ls-container-nav title="备忘录" >
+		<z-paging ref="paging" class="container zpaging" v-model="list" @query="queryList" :default-page-size="30" :fixed="false">
 			<template #top>
 				<view class="top-info">
 					<view class="top-btn" @click="goBook">备忘本</view>

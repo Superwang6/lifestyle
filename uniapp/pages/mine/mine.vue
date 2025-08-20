@@ -56,7 +56,7 @@
 	
 	const imgView = ref(null)
 	const imgUrl = computed(() => {
-		return userInfo.imgUrl ? settingsStore.filePrefix + userInfo.imgUrl : '/static/logo.jpg'
+		return userInfo.value.imgUrl ? (settingsStore.filePrefix + userInfo.value.imgUrl) : '/static/logo.jpg'
 	})
 	const openImg = (imgUrl) => {
 		imgView.value.openImg(imgUrl)

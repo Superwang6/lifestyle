@@ -1,5 +1,5 @@
 <template>
-	<ls-container-nav title="备忘本" :shadow="true">
+	<ls-container-nav title="备忘本">
 		<view class="container">
 			<view class="left">
 				<scroll-view class="scroller" scroll-y :show-scrollbar="false">
@@ -249,6 +249,7 @@
 		
 		.left {
 			width: 30vw;
+			border-top: 1px solid #e5e5e5;
 			
 			.scroller {
 				height: 100%;
@@ -284,16 +285,6 @@
 			}
 		}
 		
-		// .collapse-title {
-		// 	font-size: var(--font-size);
-		// 	padding: 8px 0 8px 10px;
-		// 	height: 30px;
-		// }
-		// .add-classify-btn {
-		// 	background-color: lightblue;
-		// 	width: 60%;
-		// 	margin-left: 20px;
-		// }
 	}
 	
 	.popup-container {

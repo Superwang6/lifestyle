@@ -34,6 +34,7 @@ export const useJotStore = defineStore('jot-info', () => {
 		return jotRequest.value
 	}
 	function queryJotBookList(successCallback:any, failCallback?:any) {
+		console.log("query jot book");
 		const request = {
 			"pageNum": 1,
 			"pageSize": 10000
@@ -41,6 +42,7 @@ export const useJotStore = defineStore('jot-info', () => {
 		post('/jotBook/page', request, (data : any) => {
 			bookList.value = []
 			bookList.value.push(...data.data)
+			console.log(bookList.value);
 			successCallback()
 		}, () => {
 			failCallback()

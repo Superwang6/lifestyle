@@ -46,7 +46,6 @@
 			<view class="btn save-user" @click="saveUserInfo">保存</view>
 		</view>
 	</ls-container-nav>
-	
 	<ls-choose-popup ref="sexPopup" title="选择性别"></ls-choose-popup>
 	<ls-datetime-popup ref="birthdayPopup" :mode="1|2|4"></ls-datetime-popup>
 </template>

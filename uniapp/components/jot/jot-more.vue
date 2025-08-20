@@ -40,6 +40,7 @@
 
 <script setup>
 	import {
+		computed,
 		onMounted,
 		reactive,
 		ref
@@ -77,15 +78,14 @@
 	])
 	const chooseStatus = (status) => {
 		if(jotRequest.value.status == status) {
-			jotRequest.value.status = null
+			jotRequest.value.status = undefined
 		} else {
 			jotRequest.value.status = status 
 		}
 	}
-	const classifyList = ref([])
 	const chooseClassify = (classifyId) => {
 		if(jotRequest.value.classifyId == classifyId) {
-			jotRequest.value.classifyId = null
+			jotRequest.value.classifyId = undefined
 		} else {
 			jotRequest.value.classifyId = classifyId
 		}
@@ -95,26 +95,34 @@
 		backgroundColor: 'lightblue'
 	})
 	const confirm = () => {
-		if(jotRequest.value.status == -1) {
-			jotRequest.value.status = undefined
-		}
 		emits('filterParam')
 		uni.setStorageSync('jot_more_filter', jotRequest.value)
 		drawer.value.close()
 	}
 
-	const bookData = ref([])
-	const bookMap = ref({})
+	const bookData = computed(() => {
+		const result = []
+		for (let book of bookList.value) {
+			result.push({
+				'text': book.name,
+				'value': book.id
+			})
+		}
+		return result
+	})
+	const bookMap = computed(() => {
+		const result = {}
+		for (var i = 0; i < bookList.value.length; i++) {
+			result[bookList.value[i].id] = bookList.value[i]
+		}
+		return result
+	})
+	const chooseBookId = ref(jotRequest.value.bookId)
+	const classifyList = computed(() => {
+		return bookMap.value[chooseBookId.value].classifyList
+	})
 	const queryBookList = () => {
 		jotStore.queryJotBookList(() => {
-			for (var i = 0; i < bookList.value.length; i++) {
-				const res = {
-					'text': bookList.value[i].name,
-					'value': bookList.value[i].id
-				}
-				bookData.value.push(res)
-				bookMap.value[bookList.value[i].id] = bookList.value[i]
-			}
 			if(jotRequest.value.bookId) {
 				classifyList.value = bookMap.value[jotRequest.value.bookId].classifyList
 			} else {
@@ -123,8 +131,8 @@
 		})
 	}
 	const changeBook = (bookId) => {
-		classifyList.value = bookMap.value[bookId].classifyList
-		jotRequest.value.classifyId = null
+		chooseBookId.value = bookId
+		jotRequest.value.classifyId = undefined
 	}
 	
 	const chooseTimeStyle = reactive({
@@ -135,7 +143,7 @@
 		if(jotRequest.value.timeType != index) {
 			jotRequest.value.timeType = index
 		} else {
-			jotRequest.value.timeType = null
+			jotRequest.value.timeType = undefined
 		}
 	}
 	

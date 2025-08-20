@@ -43,7 +43,7 @@
 		emit('cancel')
 	}
 	const addBookClick = () => {
-		if (props.book.id) {
+		if (props?.book?.id) {
 			addBookFormer.value.validate().then((res : any) => {
 				const request = {
 					'id': props.book.id,
@@ -79,8 +79,8 @@
 	}
 	
 	onMounted(() => {
-		bookInfo.value.name = props?.book.name
-		bookInfo.value.description = props?.book.description
+		bookInfo.value.name = props?.book?.name
+		bookInfo.value.description = props?.book?.description
 	})
 </script>
 
