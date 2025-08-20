@@ -206,3 +206,54 @@ ALTER TABLE `lifestyle_prod`.`user_base`
 
 SET
 FOREIGN_KEY_CHECKS=1;
+
+
+SET
+FOREIGN_KEY_CHECKS=0;
+
+CREATE TABLE `lifestyle_prod`.`module_info`
+(
+    `id`           int(11) NOT NULL AUTO_INCREMENT,
+    `name`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
+    `sort`         int(11) NULL DEFAULT NULL COMMENT '排序',
+    `is_hide`      tinyint(1) NULL DEFAULT 0 COMMENT '是否隐藏，0-否，1-隐藏',
+    `unlock_level` int(11) NULL DEFAULT 1 COMMENT '解锁等级',
+    `icon_url`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标url',
+    `web_url`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端地址',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '功能模块' ROW_FORMAT = Dynamic;
+
+CREATE TABLE `lifestyle_prod`.`sms_record`
+(
+    `id`               bigint(20) NOT NULL AUTO_INCREMENT,
+    `mobile_phone`     varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '目标手机号',
+    `message`          varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '消息内容',
+    `sign`             varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '签名',
+    `source_user_id`   bigint(20) NULL DEFAULT NULL COMMENT '发送人id',
+    `source_user_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发送人名称',
+    `create_time`      datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `business`         varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '业务类型',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX              `idx_source_user_id`(`source_user_id`) USING BTREE,
+    INDEX              `idx_create_time`(`create_time`) USING BTREE,
+    INDEX              `idx_mobile_phone`(`mobile_phone`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '短信发送记录' ROW_FORMAT = Dynamic;
+
+ALTER TABLE `lifestyle_prod`.`user_base`
+    ADD COLUMN `account` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '账号' AFTER `sign`;
+
+ALTER TABLE `lifestyle_prod`.`user_base`
+    ADD UNIQUE INDEX `idx_account`(`account`) USING BTREE;
+
+CREATE TABLE `lifestyle_prod`.`user_module`
+(
+    `id`        bigint(20) NOT NULL AUTO_INCREMENT,
+    `user_id`   bigint(20) NULL DEFAULT NULL COMMENT '用户id',
+    `module_id` int(11) NULL DEFAULT NULL COMMENT '模块id',
+    `sort`      int(11) NULL DEFAULT NULL COMMENT '排序',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX       `idx_user_id`(`user_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户模块关系表' ROW_FORMAT = Dynamic;
+
+SET
+FOREIGN_KEY_CHECKS=1;
