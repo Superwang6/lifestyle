@@ -17,5 +17,8 @@ public class ProjectConfigProperties {
     private String domain;
 
     @NestedConfigurationProperty
+    private SupportProperties support;
+
+    @NestedConfigurationProperty
     private FileConfigProperties file;
 }

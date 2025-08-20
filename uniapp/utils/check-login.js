@@ -6,7 +6,7 @@ export function checkLogin() {
 		return false
 	} else {
 		uni.reLaunch({
-			url: '/pages/index/index'
+			url: '/pages/workbench/workbench'
 		})
 	}
 	return true

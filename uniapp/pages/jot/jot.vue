@@ -1,10 +1,14 @@
 <template>
-	<view class="main-container">
-		<uni-nav-bar title="备忘录" :border="false" :fixed="true" right-icon="more-filled" @clickRight="moreClick()"
-			left-icon="wallet" @clickLeft="openHome()" />
-		<uni-search-bar v-model="jotRequest.search" @confirm="searchQueryList()" @cancel="cancel" radius="20"
-			bgColor="#F0F1F2" placeholder="搜索"></uni-search-bar>
+	<ls-container-nav class="container" title="备忘录" >
 		<z-paging ref="paging" class="zpaging" v-model="list" @query="queryList" :default-page-size="30" :fixed="false">
+			<template #top>
+				<view class="top-info">
+					<view class="top-btn" @click="goBook">备忘本</view>
+					<view class="top-btn" @click="moreClick">筛选</view>
+				</view>
+				<uni-search-bar class="search" v-model="jotRequest.search" @confirm="searchQueryList()" @clear="cancel" @cancel="cancel" radius="20"
+					bgColor="#F0F1F2" placeholder="搜索"></uni-search-bar>
+			</template>
 			<uni-swipe-action ref="swiper">
 				<template v-for="(item,index) in list" :key="index">
 					<uni-swipe-action-item class="item-content" :right-options="options" @click="swipeClick($event, item)" :threshold="0">
@@ -41,13 +45,12 @@
 			</uni-swipe-action>
 		</z-paging>
 		<jot-more ref="more" @filterParam="filterParam"></jot-more>
-		<jot-home ref="home"></jot-home>
 		<uni-fab horizontal="right" vertical="bottom" :pop-menu="false" :pattern="{buttonColor: 'var(--primary-color)'}"
 			@click="addJot()"></uni-fab>
-	</view>
+	</ls-container-nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import {
 		onLoad,
 		onUnload
@@ -64,13 +67,12 @@
 	} from 'pinia'
 	import JotDetail from '@/components/jot/jot-detail.vue'
 	import JotMore from '@/components/jot/jot-more.vue';
-	import JotHome from '@/components/jot/jot-home.vue';
 	import {
 		post
-	} from '@/utils/request.js';
+	} from '@/utils/request';
 	import {
 		useJotStore
-	} from '@/stores/jot-store.js';
+	} from '@/stores/jot-store';
 	import cronstrue from 'cronstrue/i18n';
 
 	const jotStore = useJotStore()
@@ -80,14 +82,13 @@
 	const searchText = ref("")
 	const list = ref([])
 	const paging = ref(null)
-	const queryList = (pageNum, pageSize) => {
+	const queryList = (pageNum: number, pageSize:number ) => {
 		jotRequest.value.pageNum = pageNum
 		jotRequest.value.pageSize = pageSize
-		post('/jotRecord/page', jotRequest.value, (data) => {
+		post('/jotRecord/page', jotRequest.value, (data: any) => {
 			detailIndex.value = -1
 			paging.value.complete(data.data);
 		}, () => {
-			console.log('query jot error');
 			paging.value.complete(false);
 		})
 	}
@@ -110,7 +111,7 @@
 	const moreClick = () => {
 		more.value.openMore()
 	}
-	const reminInfoFormat = (item) => {
+	const reminInfoFormat = (item: any) => {
 		if (item.remindType == 0) {
 			return item.remindTime
 		} else {
@@ -134,7 +135,7 @@
 	}
 
 	const detailIndex = ref(-1)
-	const detailClick = (index) => {
+	const detailClick = (index: number) => {
 		if(detailIndex.value == index) {
 			detailIndex.value = -1
 		} else {
@@ -144,12 +145,14 @@
 
 	const jotAdd = ref(null)
 	const addJot = () => {
-		if (!jotRequest.value.bookId) {
-			queryDefaultBook()
-		}
 		if (jotRequest.value.bookId) {
 			uni.navigateTo({
 				url: '/pages/jot/jot-add?mode=0&bookId=' + jotRequest.value.bookId
+			})
+		} else {
+			uni.showToast({
+				icon: 'none',
+				title: '请选择备忘录'
 			})
 		}
 	}
@@ -168,7 +171,7 @@
 			}
 		}
 	])
-	const swipeClick = (e, item) => {
+	const swipeClick = (e :any, item: any) => {
 		if(e.index == 0) {
 			uni.navigateTo({
 				url: '/pages/jot/jot-add?mode=1',
@@ -188,12 +191,7 @@
 		swiper.value.closeAll()
 	}
 
-	const home = ref(null)
-	const openHome = () => {
-		home.value.openHome()
-	}
-	
-	const modifyStatus = (id, status) => {
+	const modifyStatus = (id:number, status:number) => {
 		const request = {
 			"id": id,
 			"status": status
@@ -205,6 +203,12 @@
 			})
 			detailIndex.value = -1
 			refreshIndex()
+		})
+	}
+	
+	const goBook = () => {
+		uni.navigateTo({
+			url: '/pages/jot/jot-book'
 		})
 	}
 
@@ -222,107 +226,113 @@
 </script>
 
 <style lang="scss" scoped>
-	page {
-		height: 100%;
-	}
-
-	.main-container {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-
-		.zpaging {
-			flex: 1;
-			
-			.item-content {
-				margin-bottom: 10px;
-				
-				.item {
-					padding: 8px 15px 8px 15px;
-					margin: 0 10px 0 10px;
-					display: flex;
-					flex-direction: column;
-					justify-content: space-around;
-					color: var(--primary-text-color);
-					background-color: var(--bg-color);
-					border-radius: var(--item-radius);
-					
-					transform: height 3s ease;
-					
-					.title-area {
-						display: flex;
-						flex-direction: row;
-						width: 100%;
-						
-						.title {
-							flex: 4;
-							font-size: var(--font-size-lg);
-						}
-						.status {
-							flex: 1;
-							text-align: right;
-							font-size: var(--font-size-ssm);
-						}
-					}
-					.extra-area {
-						display: flex;
-						flex-direction: row;
-						width: 100%;
-						
-						.remind-info {
-							flex: 4;
-							font-size: var(--font-size-ssm);
-							color: gray;
-							margin: 5rpx 0 5rpx 0;
-						}
-						.classify {
-							flex: 2;
-							font-size: var(--font-size-sm);
-							text-align: right;
-						}
-					}
-					
-					.description {
-						padding: 5rpx 0 5rpx 0;
-						font-size: var(--font-size);
-						color: var(--light-text-color);
-					}
-				}
-				.success {
-					background-color: #a6f6a675;
-				}
-				.fail {
-					background-color: #f6a7a775;
-				}
-				
+	.zpaging {
+		flex: 1;
+		.top-info {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			.search {
+				flex: 1;
 			}
+			.top-btn {
+				flex: 1;
+				background-color: var(--primary-color);
+				text-align: center;
+				height: 60rpx;
+				line-height: 60rpx;
+			}
+		}
+		
+		.item-content {
+			margin-bottom: 10px;
 			
-			.card-actions {
+			.item {
+				padding: 8px 15px 8px 15px;
+				margin: 0 10px 0 10px;
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
 				justify-content: space-around;
-				margin: 5px;
+				color: var(--primary-text-color);
+				background-color: var(--light-bg-color);
+				border-radius: var(--item-radius);
 				
-				.card-actions-item {
+				transform: height 3s ease;
+				
+				.title-area {
 					display: flex;
 					flex-direction: row;
-					justify-content: center;
-					height: 30px;
-					line-height: 30px;
+					width: 100%;
+					
+					.title {
+						flex: 4;
+						font-size: var(--font-size-lg);
+					}
+					.status {
+						flex: 1;
+						text-align: right;
+						font-size: var(--font-size-ssm);
+					}
+				}
+				.extra-area {
+					display: flex;
+					flex-direction: row;
+					width: 100%;
+					
+					.remind-info {
+						flex: 4;
+						font-size: var(--font-size-ssm);
+						color: gray;
+						margin: 5rpx 0 5rpx 0;
+					}
+					.classify {
+						flex: 2;
+						font-size: var(--font-size-sm);
+						text-align: right;
+					}
+				}
+				
+				.description {
+					padding: 5rpx 0 5rpx 0;
 					font-size: var(--font-size);
-					border-radius: var(--button-radius);
-					padding: 2px;
-					width: 80px;
+					color: var(--light-text-color);
 				}
-				.success {
-					background-color: lightblue;
-				}
-				.fail {
-					background-color: lightgray;
-				}
+			}
+			.success {
+				background-color: #a6f6a675;
+			}
+			.fail {
+				background-color: #f6a7a775;
 			}
 			
 		}
-
+		
+		.card-actions {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-around;
+			margin: 5px;
+			
+			.card-actions-item {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				height: 30px;
+				line-height: 30px;
+				font-size: var(--font-size);
+				border-radius: var(--button-radius);
+				padding: 2px;
+				width: 80px;
+			}
+			.success {
+				background-color: lightblue;
+			}
+			.fail {
+				background-color: lightgray;
+			}
+		}
+		
 	}
 </style>

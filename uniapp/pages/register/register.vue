@@ -1,21 +1,22 @@
 <template>
-	<view class="content">
-		<view class="title">账号注册</view>
-		<uni-forms ref="former" class="former" :model="registerInfo" :rules="rules">
-			<uni-forms-item name="mobilePhone" label="手机号">
-				<uni-easyinput v-model="registerInfo.mobilePhone" placeholder="请输入手机号"></uni-easyinput>
-			</uni-forms-item>
-			<uni-forms-item name="password" label="密码">
-				<uni-easyinput v-model="registerInfo.password" type="password" placeholder="请输入密码"></uni-easyinput>
-			</uni-forms-item>
-			<uni-forms-item name="confirmPassword" label="确认密码">
-				<uni-easyinput v-model="registerInfo.confirmPassword" type="password"
-					placeholder="请再次输入密码"></uni-easyinput>
-			</uni-forms-item>
-		</uni-forms>
-		<view class="btn" @click="registerAccount">注册</view>
-		<view class="login">已经有账号了？<span @click="toLogin">去登录</span></view>
-	</view>
+	<ls-container-nav title="账号注册">
+		<view class="container">
+			<uni-forms ref="former" class="former" :model="registerInfo" :rules="rules">
+				<uni-forms-item name="account" label="账号">
+					<uni-easyinput v-model="registerInfo.account" placeholder="请输入账号"></uni-easyinput>
+				</uni-forms-item>
+				<uni-forms-item name="password" label="密码">
+					<uni-easyinput v-model="registerInfo.password" type="password" placeholder="请输入密码"></uni-easyinput>
+				</uni-forms-item>
+				<uni-forms-item name="confirmPassword" label="确认密码">
+					<uni-easyinput v-model="registerInfo.confirmPassword" type="password"
+						placeholder="请再次输入密码"></uni-easyinput>
+				</uni-forms-item>
+			</uni-forms>
+			<view class="btn" @click="registerAccount">注册</view>
+			<view class="login">已经有账号了？<view class="go-login" @click="toLogin">去登录</view></view>
+		</view>
+	</ls-container-nav>
 </template>
 
 <script setup>
@@ -29,13 +30,13 @@
 
 	const registerInfo = ref({})
 	const rules = ref({
-		'mobilePhone': {
+		'account': {
 			'rules': [{
 				required: true,
-				errorMessage: '请输入用户名'
+				errorMessage: '请输入账号'
 			}, {
 				minLength: 1,
-				errorMessage: '请输入用户名'
+				errorMessage: '请输入账号'
 			}]
 		},
 		'password': {
@@ -60,8 +61,6 @@
 				},
 				{
 					validateFunction: (rule,value,data,callback) => {
-						console.log(value);
-						console.log(data);
 						if(value == data.password) {
 							return true
 						} else {
@@ -77,7 +76,7 @@
 	const registerAccount = () => {
 		former.value.validate().then(res => {
 			const request = {
-				"mobilePhone": res.mobilePhone,
+				"account": res.account,
 				"password": crypto.MD5(res.password).toString(),
 				"length": res.password.length
 			}
@@ -90,7 +89,7 @@
 					url: '/pages/login/login',
 					success: (loginRes) => {
 						loginRes.eventChannel.emit('registerToLogin', {
-							mobilePhone: res.mobilePhone,
+							account: res.account,
 							password: res.password
 						})
 					}
@@ -108,28 +107,22 @@
 </script>
 
 <style lang="scss" scoped>
-	.content {
-		margin: 20px;
-
-		.title {
-			font-size: var(--font-size-llg);
-			text-align: center;
-			margin: 30px 0 30px 0;
-			font-weight: bold;
-		}
-
+	.container {
+		padding: 40rpx;
+		
 		.login {
 			font-size: var(--font-size);
 			color: var(--light-text-color);
 			text-align: center;
-
-			margin: 20px;
-
-			span {
+		
+			margin: 40rpx;
+		
+			.go-login {
+				display: inline;
 				font-weight: bold;
 				color: skyblue;
 			}
 		}
-
 	}
+	
 </style>

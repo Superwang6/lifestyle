@@ -7,13 +7,13 @@
 	</uni-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import { ref } from 'vue';
 	
 	const popup = ref(null)
 	const url = ref(null)
 	
-	const openImg = (imgUrl) => {
+	const openImg = (imgUrl: string) => {
 		url.value = imgUrl
 		popup.value.open()
 	}
@@ -27,8 +27,6 @@
 
 <style lang="scss" scoped>
 	.content {
-		width: 100vw;
-		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;

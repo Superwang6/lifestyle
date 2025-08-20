@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fudges.server.business.jot.mapper.JotRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.fudges.server.business.jot.entity.JotRecord">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="description" property="description" />
+        <result column="classify_id" property="classifyId" />
+        <result column="book_id" property="bookId" />
+        <result column="user_id" property="userId" />
+        <result column="status" property="status" />
+        <result column="remind_type" property="remindType" />
+        <result column="remind_time" property="remindTime" />
+        <result column="remind_status" property="remindStatus" />
+        <result column="schedule_task_id" property="scheduleTaskId" />
+        <result column="remind_time_json" property="remindTimeJson" />
+        <result column="create_time" property="createTime" />
+        <result column="modify_time" property="modifyTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, description, classify_id, book_id, user_id, status, remind_type, remind_time, remind_status, schedule_task_id, remind_time_json, create_time, modify_time
+    </sql>
+
+    <resultMap id="resultMap" type="cn.fudges.server.business.jot.entity.JotRecord" extends="BaseResultMap">
+        <result column="classify_name" property="classifyName"/>
+        <result column="book_name" property="bookName"/>
+    </resultMap>
+
+    <select id="queryPageList" resultMap="resultMap">
+        SELECT
+            jr.*
+            ,jc.name as classify_name, jb.name as book_name
+        FROM jot_record jr
+        LEFT JOIN jot_classify jc ON jr.classify_id = jc.id
+        JOIN jot_book jb ON jr.book_id = jb.id
+        WHERE
+            1 = 1
+            <if test="request.search != null and request.search != ''">
+                AND (jr.title like concat('%',#{request.search},'%') or jr.description like concat('%',#{request.search},'%'))
+            </if>
+            <if test="request.classifyId != null">
+                AND jr.classify_id = #{request.classifyId}
+            </if>
+            <if test="request.bookId != null">
+                AND jr.book_id = #{request.bookId}
+            </if>
+            <if test="request.userId != null">
+                AND jr.user_id = #{request.userId}
+            </if>
+            <if test="request.status != null">
+                AND jr.status = #{request.status}
+            </if>
+            <if test="request.startTime != null" >
+                AND jr.remind_time &gt;= #{request.startTime}
+            </if>
+            <if test="request.endTime != null" >
+                AND jr.remind_time &lt;= #{request.endTime}
+            </if>
+            <if test="request.remindType != null">
+                AND jr.remind_type = #{request.remindType}
+            </if>
+        ORDER BY jr.create_time desc, jr.id desc
+    </select>
+</mapper>

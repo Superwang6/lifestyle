@@ -6,6 +6,7 @@ import cn.fudges.server.common.result.ResultCodeEnum;
 import cn.fudges.server.common.result.ResultResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -42,6 +43,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResultResponse<Void> handleNoResourceFoundException() {
         return ResultResponse.fail(ResultCodeEnum.NOT_FOUND.getCode(), ResultCodeEnum.NOT_FOUND.getMessage(), null);
+    }
+
+    // 接收对象的参数不存在
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResultResponse<Void> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return ResultResponse.fail(ResultCodeEnum.PARAM_ERROR.getCode(), ResultCodeEnum.PARAM_ERROR.getMessage(), null);
     }
 
     // 捕获所有其他异常

@@ -1,6 +1,10 @@
 {
-	"pages": [{
+	"pages": [
+		{
 			"path": "pages/launch/launch"
+		},
+		{
+			"path" : "pages/workbench/workbench"
 		},
 		{
 			"path": "pages/index/index"
@@ -9,16 +13,37 @@
 			"path": "pages/jot/jot"
 		},
 		{
+			"path": "pages/jot/jot-add"
+		},
+		{
+			"path": "pages/jot/jot-book"
+		},
+		{
 			"path": "pages/mine/mine"
 		},
 		{
 			"path": "pages/login/login"
 		},
 		{
-			"path": "pages/jot/jot-add"
+			"path": "pages/settings/settings"
 		},
 		{
-			"path": "pages/settings/settings"
+			"path": "pages/settings/account"
+		},
+		{
+			"path": "pages/settings/account-change"
+		},
+		{
+			"path": "pages/settings/mobile-bind"
+		},
+		{
+			"path": "pages/settings/mobile-code"
+		},
+		{
+			"path": "pages/settings/module-setting"
+		},
+		{
+			"path": "pages/settings/password-setting"
 		},
 		{
 			"path": "pages/register/register"
@@ -32,6 +57,9 @@
 				"enablePullDownRefresh": false,
 				"disableScroll": true
 			}
+		},
+		{
+			"path" : "pages/login/forget-password"
 		}
 	],
 	"globalStyle": {
@@ -47,13 +75,10 @@
 		"selectedColor": "#3cc51f",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
-		"list": [{
-				"pagePath": "pages/index/index",
-				"text": "首页"
-			},
+		"list": [
 			{
-				"pagePath": "pages/jot/jot",
-				"text": "备忘"
+				"pagePath": "pages/workbench/workbench",
+				"text": "工作台"
 			},
 			{
 				"pagePath": "pages/mine/mine",

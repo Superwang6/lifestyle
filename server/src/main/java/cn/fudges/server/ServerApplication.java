@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@MapperScan("cn.fudges.server.mapper")
+@MapperScan(basePackages = {"cn.fudges.server.business.*.mapper"})
 public class ServerApplication {
 
     public static void main(String[] args) {

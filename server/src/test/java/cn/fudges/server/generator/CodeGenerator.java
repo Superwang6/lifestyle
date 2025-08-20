@@ -15,12 +15,13 @@ import java.sql.Types;
 
 public class CodeGenerator {
 
-    public static final String TABLE_NAME = "file_upload";
+    public static final String TABLE_NAME = "module_info";
+    public static final String MODULE_NAME = "user";
+
     public static final String AUTHOR = "wpy";
 
-
     public static final String OUTPUT_DIR = "gcode";
-    public static final String PARENT_PACKAGE = "cn.fudges.server";
+    public static final String PARENT_PACKAGE = "cn.fudges.server.business." + MODULE_NAME;
     public static final String URL = "jdbc:mysql://local.fudges.cn:13307/lifestyle?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
     public static final String USERNAME = "root";
     public static final String PASSWORD = "601202";

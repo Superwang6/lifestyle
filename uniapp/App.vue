@@ -2,16 +2,22 @@
 	import {
 		post
 	} from '@/utils/request.js'
-	import {onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+	import {
+		onLaunch,
+		onShow,
+		onHide
+	} from '@dcloudio/uni-app'
 	import permision from '@/utils/permission.js'
-	import { useSettingsStore } from '@/stores/settings-store'
-	
+	import {
+		useSettingsStore
+	} from '@/stores/settings-store'
+
 	const settingsStore = useSettingsStore()
 	onLaunch(() => {
 		console.log('App Launch')
 		// #ifdef APP-PLUS
 		const isNotify = permision.checkSystemEnableNotification()
-		if(isNotify) {
+		if (isNotify) {
 			uni.onPushMessage((res) => {
 				console.log(res)
 				uni.createPushMessage({
@@ -35,11 +41,11 @@
 			})
 		}
 		// #endif
-		
+
 		// 初始化配置
 		settingsStore.initSettingsStore()
 	})
-	
+
 	onShow(() => {
 		console.log('App Show')
 	})
@@ -50,16 +56,13 @@
 
 <style lang="scss">
 	@import "@/styles/common.scss";
+
 	/*每个页面公共css */
-	#app {
-		box-sizing: border-box;
-		padding-top: var(--status-bar-height);
-
-		position: fixed;
-		top: 0;
-		right: 0;
-		left: 0;
-		bottom: 0;
-
-	}
+	// #app {
+	// 	height: 100%;
+	// }
+	// page {
+	// 	// padding-top: var(--status-bar-height);
+	// 	height: 100vh;
+	// }
 </style>

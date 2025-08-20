@@ -1,7 +1,7 @@
 <template>
 	<ls-drawer ref="drawer" mode="right">
 		<template #header>
-			筛选
+			更多
 		</template>
 		<scroll-view class="filter-content" scroll-y :show-scrollbar="false">
 			<uni-forms label-position="top" :modelValue="jotRequest">
@@ -58,7 +58,7 @@
 
 	const drawer = ref(null)
 	const jotStore = useJotStore()
-	const { jotRequest } = storeToRefs(jotStore)
+	const { jotRequest, bookList } = storeToRefs(jotStore)
 	const openMore = () => {
 		drawer.value.open()
 	}
@@ -106,23 +106,19 @@
 	const bookData = ref([])
 	const bookMap = ref({})
 	const queryBookList = () => {
-		const request = {
-			"pageNum": 1,
-			"pageSize": 30
-		}
-		post('/jotBook/page', request, (data) => {
-			for (var i = 0; i < data.data.length; i++) {
+		jotStore.queryJotBookList(() => {
+			for (var i = 0; i < bookList.value.length; i++) {
 				const res = {
-					'text': data.data[i].name,
-					'value': data.data[i].id
+					'text': bookList.value[i].name,
+					'value': bookList.value[i].id
 				}
 				bookData.value.push(res)
-				bookMap.value[data.data[i].id] = data.data[i]
+				bookMap.value[bookList.value[i].id] = bookList.value[i]
 			}
 			if(jotRequest.value.bookId) {
 				classifyList.value = bookMap.value[jotRequest.value.bookId].classifyList
 			} else {
-				classifyList.value = data.data[0].classifyList
+				classifyList.value = bookList.value[0].classifyList
 			}
 		})
 	}
@@ -154,21 +150,28 @@
 <style lang="scss" scoped>
 	.filter-content {
 		height: 100%;
+		
+		.time {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			overflow-y: auto;
+			max-height: 20vh;
+		}
+		.classify {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+		.active {
+			color: #FFFFFF;
+			background-color: lightblue;
+		}
 	}
-	.time {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		overflow-y: auto;
-		max-height: 20vh;
-	}
-	.classify {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-	}
-	.active {
-		color: #FFFFFF;
+	
+	.book {
 		background-color: lightblue;
+		margin-bottom: 40rpx;
 	}
+	
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<uni-popup ref="popup" @change="popChange" type="bottom" background-color="#fff" border-radius="10px 10px 0 0">
 		<view class="content">
-			<view class="title">{{props.title}}</view>
+			<view class="title">{{title}}</view>
 			<template v-for="item in options">
 				<view class="option" @click="chooseOption(item)">
 					{{item.name}}
@@ -13,18 +13,23 @@
 	</uni-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import {
 		ref
 	} from 'vue';
 
-	const props = defineProps(['title'])
+	const props = defineProps<{
+		title: string
+	}>()
+	interface Option {
+		name: string
+	}
 
 	const popup = ref(null)
 	const options = ref(null)
 	let popResolve = undefined
 	let popReject = undefined
-	const open = (opts) => {
+	const open = (opts: Option[]) => {
 		options.value = opts
 		popup.value.open()
 		return new Promise((resolve,reject) => {
@@ -32,7 +37,7 @@
 			popReject = reject
 		})
 	}
-	const chooseOption = (item) => {
+	const chooseOption = (item: Option) => {
 		if(popResolve) {
 			popResolve(item)
 			popResolve = undefined
@@ -46,7 +51,7 @@
 			popResolve = undefined
 			popReject = undefined
 		}
-		popup.close()
+		popup.value.close()
 	}
 	const popChange = (e) => {
 		if(!e.show) {

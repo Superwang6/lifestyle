@@ -1,7 +1,8 @@
 package cn.fudges.server.service;
 
-import cn.fudges.server.entity.UserBase;
-import cn.fudges.server.request.UserPasswordRegisterRequest;
+import cn.fudges.server.business.user.service.UserRegisterService;
+import cn.fudges.server.business.user.entity.UserBase;
+import cn.fudges.server.business.user.request.UserPasswordRegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

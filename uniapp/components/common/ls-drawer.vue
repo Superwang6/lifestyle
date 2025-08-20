@@ -1,5 +1,5 @@
 <template>
-	<uni-drawer ref="draw" :mode="props.mode">
+	<uni-drawer ref="draw" :mode="mode">
 		<view class="content">
 			<view class="header">
 				<slot name="header"></slot>
@@ -14,11 +14,13 @@
 	</uni-drawer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import {
 		ref
 	} from 'vue'
-	const props = defineProps(['mode'])
+	const props = defineProps<{
+		mode?: string
+	}>()
 
 	const draw = ref(null)
 	const open = () => {

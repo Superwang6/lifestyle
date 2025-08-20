@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fudges.server.business.schedule.mapper.ScheduleRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.fudges.server.business.schedule.entity.ScheduleRecord">
+        <id column="id" property="id" />
+        <result column="schedule_task_id" property="scheduleTaskId" />
+        <result column="create_time" property="createTime" />
+        <result column="user_id" property="userId" />
+        <result column="business_type" property="businessType" />
+        <result column="result" property="result" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, schedule_task_id, create_time, user_id, business_type, `result`
+    </sql>
+
+    <select id="queryTriggerTimeByTaskId" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        schedule_record
+        WHERE
+        schedule_task_id = #{taskId}
+    </select>
+</mapper>

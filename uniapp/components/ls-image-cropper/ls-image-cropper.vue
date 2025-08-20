@@ -36,7 +36,7 @@
 			<view v-if="!choosable" class="choose-btn" @click="cropClick">确定</view>
 			<block v-else-if="!!imgSrc">
 				<view class="rechoose" @click="chooseImage">重选</view>
-				<button class="button" @click="cropClick">确定</button>
+				<view class="button" @click="cropClick">确定</view>
 			</block>
 			<view v-else class="choose-btn" @click="chooseImage">选择图片</view>
 		</view>

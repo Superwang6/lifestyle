@@ -1,9 +1,8 @@
 package cn.fudges.server.utils;
 
 import cn.fudges.server.common.result.ResultCodeEnum;
-import cn.fudges.server.entity.JotRecord;
+import cn.fudges.server.business.jot.entity.JotRecord;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;

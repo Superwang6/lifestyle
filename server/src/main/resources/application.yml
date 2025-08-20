@@ -24,3 +24,6 @@ sa-token:
 logging:
   pattern:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %highlight(%-5level) %clr([%15thread]){faint} %clr([%40logger{39}]){cyan} %clr([%X{traceId}]){faint} %clr(:){faint} %m%n"
+
+mybatis-plus:
+  mapper-locations: classpath*:/cn/fudges/server/business/*/mapper/xml/*.xml

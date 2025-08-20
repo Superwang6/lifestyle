@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fudges.server.business.file.mapper.FileUploadMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.fudges.server.business.file.entity.FileUpload">
+        <id column="id" property="id" />
+        <result column="file_path" property="filePath" />
+        <result column="name" property="name" />
+        <result column="suffix" property="suffix" />
+        <result column="size" property="size" />
+        <result column="business_name" property="businessName" />
+        <result column="create_time" property="createTime" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, file_path, name, suffix, size, business_name, create_time, user_id
+    </sql>
+
+</mapper>

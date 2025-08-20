@@ -37,3 +37,5 @@ project:
     upload-dir: ${user.dir}/uploads
     auth-exclude:
       - ${project.file.pre-path}/userAvatar/**
+  support:
+    mobile: false

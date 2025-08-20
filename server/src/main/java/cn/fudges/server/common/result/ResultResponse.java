@@ -49,6 +49,9 @@ public class ResultResponse<T> implements Serializable {
     public static <T,V> ResultResponse<List<V>> success(IPage<T> data, Class<V> tClass) {
         return new ResultResponse<>(BeanUtil.copyToList(data.getRecords(), tClass), data.getTotal());
     }
+    public static <T,V> ResultResponse<List<V>> success(List<T> data, Class<V> tClass) {
+        return new ResultResponse<>(BeanUtil.copyToList(data, tClass), (long) data.size());
+    }
 
     public static <T,V> ResultResponse<V> success(T data, Class<V> tClass) {
         return new ResultResponse<>(BeanUtil.copyProperties(data, tClass));

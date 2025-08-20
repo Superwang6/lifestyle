@@ -61,7 +61,6 @@
 	import {
 		format
 	} from '@/utils/time'
-	import lsCycle from '@/components/common/ls-cycle.vue'
 	import lsCron from '@/components/common/ls-cron.vue'
 	
 	const now = new Date()
@@ -203,7 +202,7 @@
 
 <style lang="scss" scoped>
 	.detail {
-		height: 100vh;
+		height: 100%;
 		display: flex;
 		flex-direction: column;
 		margin: 0 10px 0 10px;

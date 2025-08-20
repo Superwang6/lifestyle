@@ -1,45 +1,52 @@
 <template>
-	<uni-nav-bar left-icon="left" title="个人资料" right-text="保存" :border="false"
-		@clickLeft="back" @clickRight="saveUserInfo"></uni-nav-bar>
-	<view class="content">
-		<view class="avatar" @click="openPhoto">
-			<image class="img" :src="user.imgUrl ? settingsStore.filePrefix + user.imgUrl : '/static/logo.png'"></image>
-			<uni-icons class="icon" type="camera-filled" size="23"></uni-icons>
-		</view>
-		<view class="base-info">
-			<view class="line-item">
-				<view class="line-left">手机号</view>
-				<uni-easyinput class="line-right" :value="user.mobilePhone" :inputBorder="false" :clearable="false"
-					disabled :styles="{disableColor: '#fff'}"></uni-easyinput>
+	<ls-container-nav title="个人资料">
+		<view class="container">
+			<view class="avatar" @click="openPhoto">
+				<image class="img" :src="user.imgUrl ? settingsStore.filePrefix + user.imgUrl : '/static/logo.jpg'"></image>
+				<uni-icons class="icon" type="camera-filled" size="23"></uni-icons>
 			</view>
-			<view class="line-item">
-				<view class="line-left">用户名</view>
-				<uni-easyinput class="line-right" v-model="user.name" :inputBorder="false"
-					:clearable="false"></uni-easyinput>
-			</view>
-		</view>
-		<view class="base-info">
-			<view class="line-item" @click="chooseSex">
-				<view class="line-left">性别</view>
-				<view class="line-right text">
-					{{sexFormat(user.sex)}}
-					<uni-icons class="right-icon" type="right"></uni-icons>
+			<view class="base-info">
+				<view class="line-item">
+					<view class="line-left">账号</view>
+					<uni-easyinput class="line-right" :value="user.account" :inputBorder="false" :clearable="false" disabled
+						:styles="{disableColor: '#fff'}"></uni-easyinput>
+				</view>
+				<view class="line-item" v-if="settingsStore.mobileSupport">
+					<view class="line-left">手机号</view>
+					<uni-easyinput class="line-right" :value="user.mobilePhone" :inputBorder="false" :clearable="false"
+						disabled :styles="{disableColor: '#fff'}"></uni-easyinput>
+				</view>
+				<view class="line-item">
+					<view class="line-left">昵称</view>
+					<uni-easyinput class="line-right" v-model="user.name" :inputBorder="false"
+						:clearable="false"></uni-easyinput>
 				</view>
 			</view>
-			<view class="line-item" @click="chooseBirthday">
-				<view class="line-left">生日</view>
-				<view class="line-right text">
-					{{birthdayFormat(user.birthday)}}
-					<uni-icons class="right-icon" type="right"></uni-icons>
+			<view class="base-info">
+				<view class="line-item" @click="chooseSex">
+					<view class="line-left">性别</view>
+					<view class="line-right text">
+						{{sexFormat(user.sex)}}
+						<uni-icons class="right-icon" type="right"></uni-icons>
+					</view>
+				</view>
+				<view class="line-item" @click="chooseBirthday">
+					<view class="line-left">生日</view>
+					<view class="line-right text">
+						{{birthdayFormat(user.birthday)}}
+						<uni-icons class="right-icon" type="right"></uni-icons>
+					</view>
+				</view>
+				<view class="line-item">
+					<view class="line-left">签名</view>
+					<uni-easyinput class="line-right" v-model="user.sign" :inputBorder="false" :clearable="false"
+						placeholder="请填写您的个性签名"></uni-easyinput>
 				</view>
 			</view>
-			<view class="line-item">
-				<view class="line-left">签名</view>
-				<uni-easyinput class="line-right" v-model="user.sign" :inputBorder="false"
-					:clearable="false"></uni-easyinput>
-			</view>
+			<view class="btn save-user" @click="saveUserInfo">保存</view>
 		</view>
-	</view>
+	</ls-container-nav>
+	
 	<ls-choose-popup ref="sexPopup" title="选择性别"></ls-choose-popup>
 	<ls-datetime-popup ref="birthdayPopup" :mode="1|2|4"></ls-datetime-popup>
 </template>
@@ -56,7 +63,9 @@
 	import lsChoosePopup from '@/components/common/ls-choose-popup.vue';
 	import lsDatetimePopup from '@/components/common/ls-datetime-popup.vue';
 	import dayjs from 'dayjs'
-	import { useSettingsStore } from '@/stores/settings-store';
+	import {
+		useSettingsStore
+	} from '@/stores/settings-store';
 
 	const settingsStore = useSettingsStore()
 	const user = ref({})
@@ -84,10 +93,10 @@
 					'name': '女'
 				}
 			]).then((item) => {
-				user.value.sex = item.value
-			}).catch(() => {})
+			user.value.sex = item.value
+		}).catch(() => {})
 	}
-	
+
 	const birthdayPopup = ref(null)
 	const birthdayFormat = (birthday) => {
 		return dayjs(birthday).format('YYYY-MM-DD')
@@ -111,13 +120,13 @@
 				icon: 'none',
 				title: '修改成功'
 			})
-			post('/userBase/detail/' + user.value.id, {} ,(data) => {
+			post('/userBase/detail', {}, (data) => {
 				uni.setStorageSync('userInfo', data.data)
 				back()
 			})
 		})
 	}
-	
+
 	const openPhoto = () => {
 		uni.navigateTo({
 			url: '/pages/image/image-copper',
@@ -128,28 +137,26 @@
 			}
 		})
 	}
-
-	onMounted(() => {
-		const userInfo = uni.getStorageSync('userInfo')
-		post('/userBase/detail/' + userInfo.id, {}, (data) => {
+	
+	const queryUser = () => {
+		post('/userBase/detail', {}, (data) => {
 			user.value = data.data
 		})
+	}
+
+	onMounted(() => {
+		queryUser()
 	})
 </script>
 
 <style lang="scss" scoped>
-	.content {
+	.container {
 		padding-top: 100rpx;
-
-		display: flex;
-		flex-direction: column;
 		align-items: center;
-		background-color: var(--bg-color);
-		height: 100vh;
 
 		.avatar {
 			position: relative;
-			
+
 			.img {
 				position: relative;
 				width: 200rpx;
@@ -206,6 +213,10 @@
 				}
 			}
 		}
-
+		.save-user {
+			width: 70%;
+			position: absolute;
+			bottom: 80rpx;
+		}
 	}
 </style>

@@ -1,11 +1,10 @@
 package cn.fudges.server.service;
 
-import cn.fudges.server.request.UserPasswordRequest;
+import cn.fudges.server.business.user.service.UserPasswordService;
+import cn.fudges.server.business.user.request.UserPasswordRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author 王平远

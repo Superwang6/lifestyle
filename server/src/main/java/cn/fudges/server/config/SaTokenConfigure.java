@@ -29,6 +29,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         String[] excludeArray = new String[] {
                 "/error",
+                "/icon/**",
                 projectConfigProperties.getFile().getPrePath() + "/**"
         };
 

@@ -1,16 +1,23 @@
 <template>
-	<view class="main-container">
-		<uni-nav-bar title="设置" left-icon="left" :shadow="false" :border="false" @clickLeft="back()"></uni-nav-bar>
-		<uni-group >
+	<ls-container-nav title="设置">
+		<view class="container">
 			<view class="group">
-				<view class="group-left">个人资料</view>
-				<uni-icons type="right" class="group-right"></uni-icons>
+				<view class="item" @click="goAccountSetting">
+					<view class="item-left">账号管理</view>
+					<uni-icons type="right" class="item-right"></uni-icons>
+				</view>
 			</view>
-		</uni-group>
-		<uni-group>
-			<view class="logout" @click="logout">登出</view>
-		</uni-group>
-	</view>
+			<view class="group">
+				<view class="item" @click="goModuleSetting">
+					<view class="item-left">功能管理</view>
+					<uni-icons type="right" class="item-right"></uni-icons>
+				</view>
+			</view>
+			<view class="group">
+				<view class="item logout" @click="logout">登出</view>
+			</view>
+		</view>
+	</ls-container-nav>
 </template>
 
 <script setup>
@@ -26,29 +33,40 @@
 			url: '/pages/login/login'
 		})
 	}
+	const goAccountSetting = () => {
+		uni.navigateTo({
+			url: '/pages/settings/account'
+		})
+	}
+	const goModuleSetting = () => {
+		uni.navigateTo({
+			url: '/pages/settings/module-setting'
+		})
+	}
 </script>
 
 <style lang="scss" scoped>
-	.main-container {
-		display: flex;
-		flex-direction: column;
-
-		background-color: #EDEDED;
-		height: 100vh;
-
+	.container {
 		.group {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-
-			.group-left {
-				flex: 1;
-				margin: 0 10px 0 10px;
+			background-color: var(--light-bg-color);
+			margin-top: 20rpx;
+			padding: 10rpx;
+			
+			.item {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				height: 70rpx;
+			
+				.item-left {
+					flex: 1;
+					margin: 0 10px 0 10px;
+				}
 			}
-		}
-		
-		.logout {
-			text-align: center;
+			
+			.logout {
+				justify-content: center;
+			}
 		}
 	}
 </style>

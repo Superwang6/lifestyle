@@ -5,7 +5,7 @@
 		</template>
 		<scroll-view class="filter-content" scroll-y :show-scrollbar="false">
 			<uni-collapse accordion>
-				<template v-for="item in bookList">
+				<template v-for="(item,index) in bookList" :key="index">
 					<uni-collapse-item>
 						<template v-slot:title>
 							<view class="collapse-title" @longpress="saveBookClick(item)">{{item.name}}</view>
@@ -56,26 +56,22 @@
 		onMounted,
 		ref
 	} from 'vue'
+	import {storeToRefs} from 'pinia'
 	import LsDrawer from '@/components/common/ls-drawer.vue';
 	import LsDialog from '@/components/common/ls-dialog.vue'
 	import {
 		post
 	} from '@/utils/request';
+	import { useJotStore } from '@/stores/jot-store';
 
+	const jotStore = useJotStore()
+	const { bookList } = storeToRefs(jotStore)
 	const drawer = ref(null)
 	const openHome = () => {
 		drawer.value.open()
 	}
-	const bookList = ref([])
 	const queryBookList = () => {
-		bookList.value = []
-		const request = {
-			"pageNum": 1,
-			"pageSize": 30
-		}
-		post('/jotBook/page', request, (data) => {
-			bookList.value.push(...data.data)
-		})
+		jotStore.queryJotBookList()
 	}
 
 	const dialog = ref(null)

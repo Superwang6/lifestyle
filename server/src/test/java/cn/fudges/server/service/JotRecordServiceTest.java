@@ -1,7 +1,8 @@
 package cn.fudges.server.service;
 
-import cn.fudges.server.entity.JotRecord;
-import cn.fudges.server.request.JotRecordRequest;
+import cn.fudges.server.business.jot.entity.JotRecord;
+import cn.fudges.server.business.jot.request.JotRecordRequest;
+import cn.fudges.server.business.jot.service.JotRecordService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

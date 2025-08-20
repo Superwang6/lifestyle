@@ -2,7 +2,8 @@
 	<view class="content">
 		<uni-row v-if="expression" class="expression">
 			<uni-col :span="6">表达式：</uni-col>
-			<uni-col :span="18"><uni-easyinput v-model="cronExpression" :clearable='false' disabled></uni-easyinput></uni-col>
+			<uni-col :span="18"><uni-easyinput v-model="cronExpression" :clearable='false'
+					disabled></uni-easyinput></uni-col>
 		</uni-row>
 		<uni-row class="explain">
 			<uni-col :span="6">解释：</uni-col>
@@ -16,18 +17,21 @@
 		</view>
 		<template v-for="item in tabList">
 			<view class="tab-item" v-if="type == item.id">
-				<view class="mode" v-if="item.modes.includes(0)" @click="chooseMode(item.id,0)" :class="{choose: chooseModesData[item.id].mode == 0}" >
+				<view class="mode" v-if="item.modes.includes(0)" @click="chooseMode(item.id,0)"
+					:class="{choose: chooseModesData[item.id].mode == 0}">
 					任意(*)
 				</view>
 				<view class="mode" v-if="item.modes.includes(4)" @click="chooseMode(item.id,4)"
 					:class="{choose: chooseModesData[item.id].mode == 4}">
 					不指定(?)
 				</view>
-				<view class="mode" v-if="item.modes.includes(1)" @click="chooseMode(item.id,1)" :class="{choose: chooseModesData[item.id].mode == 1}">
+				<view class="mode" v-if="item.modes.includes(1)" @click="chooseMode(item.id,1)"
+					:class="{choose: chooseModesData[item.id].mode == 1}">
 					范围 {{chooseModesData[item.id].mode == 1 ? chooseModesData[item.id].x : 'x'}} {{item.name}}到
 					{{chooseModesData[item.id].mode == 1 ? chooseModesData[item.id].y : 'y'}} {{item.name}}
 				</view>
-				<view class="mode" v-if="item.modes.includes(2)" @click="chooseMode(item.id,2)" :class="{choose: chooseModesData[item.id].mode == 2}">
+				<view class="mode" v-if="item.modes.includes(2)" @click="chooseMode(item.id,2)"
+					:class="{choose: chooseModesData[item.id].mode == 2}">
 					间隔从 {{chooseModesData[item.id].mode == 2 ? chooseModesData[item.id].x : 'x'}} {{item.name}}开始，每
 					{{chooseModesData[item.id].mode == 2 ? chooseModesData[item.id].y : 'y'}} {{item.name}}执行一次
 				</view>
@@ -65,7 +69,7 @@
 	</view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import {
 		computed,
 		onBeforeMount,
@@ -75,62 +79,95 @@
 	} from 'vue';
 	import cronstrue from 'cronstrue/i18n';
 
-	const props = defineProps(['modelValue','expression'])
-	const emit = defineEmits(['update:modelValue'])
+	interface ChooseMode {
+		0 : {
+			mode : number
+			chooseList : string[]
+		},
+		1 : {
+			mode : number
+			chooseList : string[]
+		},
+		2 : {
+			mode : number
+			chooseList : string[]
+		},
+		3 : {
+			mode : number
+			chooseList : string[]
+		},
+		4 : {
+			mode : number
+		},
+		5 : {
+			mode : number
+		},
+		6 : {
+			mode : number
+		}
+	}
+
+	const props = defineProps<{
+		modelValue ?: string,
+		expression : boolean
+	}>()
+	const emit = defineEmits<{
+		'update:modelValue' : [cron: string]
+	}>()
 
 	const tabList = ref([{
-			'id': 1,
-			'name': '分',
-			'modes': [1,2,3],
-			'options': ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-				"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
-				"30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
-				"40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
-				"50", "51", "52", "53", "54", "55", "56", "57", "58", "59"
-			]
-		},
-		{
-			'id': 2,
-			'name': '时',
-			'modes': [0,1,2,3],
-			'options': ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-				"20", "21", "22", "23"
-			]
-		}, 
-		{
-			'id': 3,
-			'name': '日',
-			'modes': [0,1,2,3,4],
-			'options': ["1", "2", "3", "4", "5", "6", "7", "8", "9",
-				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-				"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
-				"30", "31", "L"
-			]
-		}, 
-		{
-			'id': 4,
-			'name': '月',
-			'modes': [0,1,2,3],
-			'options': ["1", "2", "3", "4", "5", "6", "7", "8", "9",
-				"10", "11", "12"
-			]
-		}, 
-		{
-			'id': 5,
-			'name': '周',
-			'modes': [0,1,2,3,4],
-			'options': ["1", "2", "3", "4", "5", "6", "7"]
-		}, 
-		{
-			'id': 6,
-			'name': '年',
-			'modes': [0,1,2]
-		}
+		'id': 1,
+		'name': '分',
+		'modes': [1, 2, 3],
+		'options': ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+			"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+			"30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+			"40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+			"50", "51", "52", "53", "54", "55", "56", "57", "58", "59"
+		]
+	},
+	{
+		'id': 2,
+		'name': '时',
+		'modes': [0, 1, 2, 3],
+		'options': ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+			"20", "21", "22", "23"
+		]
+	},
+	{
+		'id': 3,
+		'name': '日',
+		'modes': [0, 1, 2, 3, 4],
+		'options': ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+			"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+			"30", "31", "L"
+		]
+	},
+	{
+		'id': 4,
+		'name': '月',
+		'modes': [0, 1, 2, 3],
+		'options': ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+			"10", "11", "12"
+		]
+	},
+	{
+		'id': 5,
+		'name': '周',
+		'modes': [0, 1, 2, 3, 4],
+		'options': ["1", "2", "3", "4", "5", "6", "7"]
+	},
+	{
+		'id': 6,
+		'name': '年',
+		'modes': [0, 1, 2]
+	}
 	])
 	const type = ref(1)
-	const changeTab = (index) => {
+	const changeTab = (index : number) => {
 		type.value = index
 	}
 	const initData = {
@@ -192,7 +229,7 @@
 	})
 	const popup = ref(null)
 	const openPopTabData = ref(null)
-	const chooseMode = (id, mode, option) => {
+	const chooseMode = (id : number, mode : number, option ?: string) => {
 		if (mode == 1 || mode == 2) {
 			openPopTabData.value = {
 				...tabList.value.find(item => item.id == id)
@@ -227,12 +264,12 @@
 		}
 	}
 
-	const clearChooseModesData = (id) => {
+	const clearChooseModesData = (id : number) => {
 		chooseModesData.value[id].chooseList = null
 		chooseModesData.value[id].x = null
 		chooseModesData.value[id].y = null
 	}
-	const pickerChange = (e) => {
+	const pickerChange = (e : any) => {
 		const value = e.detail.value
 		openPopTabData.value.x = value[1]
 		openPopTabData.value.y = value[3]
@@ -247,15 +284,14 @@
 	const popupClose = () => {
 		popup.value.close()
 	}
-	const refreshExpression = (type) => {
+	const refreshExpression = () => {
 		chooseModesData.value = initData
 	}
 
 	onMounted(() => {
 		if (props.modelValue != null && props.modelValue.length > 0) {
-			chooseModesData.value = {}
 			const array = props.modelValue.split(' ')
-			const tempData = {}
+			const tempData = initData
 			for (var i = 0; i < array.length; i++) {
 				tempData[i] = {}
 				const item = array[i]
@@ -313,7 +349,7 @@
 				border-top-left-radius: var(--item-radius);
 				border-top-right-radius: var(--item-radius);
 			}
-			
+
 			.refresh {
 				display: flex;
 				flex-direction: column;

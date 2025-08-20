@@ -1,18 +1,25 @@
 <template>
 	<uni-popup ref="dialoger" type="dialog">
-		<uni-popup-dialog :title="title" mode="input" @confirm="confirm">
+		<uni-popup-dialog :title="title" mode="input" @confirm="confirm" @close="close" :before-close="beforeClose">
 			<slot></slot>
 		</uni-popup-dialog>
 	</uni-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import {
 		ref
 	} from 'vue'
 
-	const props = defineProps(['title'])
-	const emits = defineEmits(['confirm'])
+	const props = withDefaults(defineProps<{
+		title : string,
+		beforeClose ?: boolean
+	}>(), {
+		beforeClose: false
+	})
+	const emits = defineEmits<{
+		confirm: [data: void]
+	}>()
 
 	const dialoger = ref(null)
 	const open = () => {
@@ -23,7 +30,6 @@
 	}
 	const confirm = () => {
 		emits('confirm')
-		dialoger.value.close()
 	}
 	defineExpose({
 		open,
