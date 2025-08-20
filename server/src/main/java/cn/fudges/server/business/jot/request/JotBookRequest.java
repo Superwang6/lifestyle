@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 import cn.fudges.server.common.request.RequestEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
 *
 * @author wpy
 * @since 2025-05-23
 */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class JotBookRequest extends RequestEntity implements Serializable {
 
