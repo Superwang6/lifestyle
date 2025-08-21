@@ -15,8 +15,8 @@
 	import dayjs from 'dayjs'
 	
 	const props = withDefaults(defineProps<{
-		start: string,
-		end: string,
+		start?: string,
+		end?: string,
 		mode: number
 	}>(), {
 		start: '1900-01-01 00:00:00',

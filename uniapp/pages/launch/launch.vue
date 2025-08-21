@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		正在加载。。。
+		
 	</view>
 </template>
 

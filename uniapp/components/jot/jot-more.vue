@@ -123,10 +123,9 @@
 	})
 	const queryBookList = () => {
 		jotStore.queryJotBookList(() => {
-			if(jotRequest.value.bookId) {
-				classifyList.value = bookMap.value[jotRequest.value.bookId].classifyList
-			} else {
-				classifyList.value = bookList.value[0].classifyList
+			if(!jotRequest.value.bookId) {
+				jotRequest.value.bookId = bookList.value[0].id
+				chooseBookId.value = bookList.value[0].id
 			}
 		})
 	}
