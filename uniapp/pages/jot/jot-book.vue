@@ -3,7 +3,7 @@
 		<view class="container">
 			<view class="left">
 				<scroll-view class="scroller" scroll-y :show-scrollbar="false">
-					<template v-for="(item,index) in bookList" :key="index">
+					<template v-for="(item,index) in bookList" :key="item.id">
 						<view class="left-item" @click="clickBook(item)" :class="activeBookId == item.id ? 'active' : ''">
 							{{item.name}}
 						</view>
@@ -17,7 +17,7 @@
 			<view class="right">
 				<uni-list v-if="activeBookId">
 					<uni-swipe-action>
-						<template v-for="classifyItem in queryActiveBookClassifyList()">
+						<template v-for="classifyItem in queryActiveBookClassifyList()" :key="classifyItem.id">
 							<uni-swipe-action-item :threshold="20" :ellipsis="1" :disabled="modifyClassifyId == classifyItem.id">
 								<template #right>
 									<view class="swipe-1"
@@ -55,7 +55,7 @@
 				<scroll-view class="scroller" :scroll-into-view="scrollToView"  :scroll-y="true">
 					<uni-list>
 						<uni-swipe-action>
-							<template v-for="(item,index) in bookList" :key="index">
+							<template v-for="(item,index) in bookList" :key="item.id">
 								<uni-swipe-action-item :threshold="20" :ellipsis="1" :disabled="modifyItemId == item.id">
 									<template #right>
 										<view class="swipe-1"

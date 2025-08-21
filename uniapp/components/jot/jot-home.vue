@@ -5,13 +5,13 @@
 		</template>
 		<scroll-view class="filter-content" scroll-y :show-scrollbar="false">
 			<uni-collapse accordion>
-				<template v-for="(item,index) in bookList" :key="index">
+				<template v-for="item in bookList" :key="item.id">
 					<uni-collapse-item>
 						<template v-slot:title>
 							<view class="collapse-title" @longpress="saveBookClick(item)">{{item.name}}</view>
 						</template>
 						<uni-swipe-action>
-							<template v-for="classifyItem in item.classifyList">
+							<template v-for="classifyItem in item.classifyList" :key="classifyItem.id">
 								<uni-swipe-action-item :threshold="20" :ellipsis="1">
 									<template #left>
 										<view class="swipe-1"

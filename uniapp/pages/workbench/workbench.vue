@@ -4,15 +4,14 @@
 			<view>
 				<view class="group">
 					<uni-grid :highlight="true" :column="3">
-						<uni-grid-item @click="goModuleSetting" v-if="moduleList.length == 0">
-							<view class="item">
+						<uni-grid-item v-if="moduleList.length == 0">
+							<view class="item" @click="goModuleSetting">
 								<uni-icons type="plusempty" size="50" class="item-img"></uni-icons>
 								添加功能
 							</view>
 						</uni-grid-item>
-						<uni-grid-item v-else v-for="(mod, index) in moduleList" :index="index" :key="index"
-							@click="clickModule(mod)">
-							<view class="item">
+						<uni-grid-item v-else v-for="mod in moduleList" :key="mod.id" >
+							<view class="item" @click="clickModule(mod)">
 								<image :src="settingsStore.domain + mod.iconUrl" class="item-img" mode="aspectFit"></image>
 								{{mod.name}}
 							</view>

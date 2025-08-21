@@ -2,7 +2,7 @@
 	<uni-popup ref="popup" @change="popChange" type="bottom" background-color="#fff" border-radius="10px 10px 0 0">
 		<view class="content">
 			<view class="title">{{title}}</view>
-			<template v-for="item in options">
+			<template v-for="item in options" :key="item.name">
 				<view class="option" @click="chooseOption(item)">
 					{{item.name}}
 				</view>

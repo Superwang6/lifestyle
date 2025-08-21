@@ -10,7 +10,7 @@
 				</uni-forms-item>
 				<uni-forms-item name="status" label="状态">
 					<view class="flex-row">
-						<template v-for="item in statusList">
+						<template v-for="(item, index) in statusList" :key="index">
 							<view class="button" :class="jotRequest.status == item.status ? 'active' : ''" @click="chooseStatus(item.status)">{{item.name}}</view>
 						</template>
 					</view>
@@ -24,7 +24,7 @@
 				</uni-forms-item>
 				<uni-forms-item name="classify" label="分类">
 					<view class="classify">
-						<template v-for="(item, index) in classifyList">
+						<template v-for="item in classifyList" :key="item.id">
 							<view class="button text-hidden" :class="jotRequest.classifyId == item.id ? 'active': ''" 
 								@click="chooseClassify(item.id)">{{item.name}}</view>
 						</template>
@@ -110,27 +110,14 @@
 		}
 		return result
 	})
-	const bookMap = computed(() => {
-		const result = {}
-		for (var i = 0; i < bookList.value.length; i++) {
-			result[bookList.value[i].id] = bookList.value[i]
-		}
-		return result
-	})
-	const chooseBookId = ref(jotRequest.value.bookId)
 	const classifyList = computed(() => {
-		return bookMap.value[chooseBookId.value].classifyList
+		const book = bookList.value.find(item => item.id == jotRequest.value.bookId)
+		return book ? book.classifyList : []
 	})
 	const queryBookList = () => {
-		jotStore.queryJotBookList(() => {
-			if(!jotRequest.value.bookId) {
-				jotRequest.value.bookId = bookList.value[0].id
-				chooseBookId.value = bookList.value[0].id
-			}
-		})
+		jotStore.queryJotBookList()
 	}
 	const changeBook = (bookId) => {
-		chooseBookId.value = bookId
 		jotRequest.value.classifyId = undefined
 	}
 	

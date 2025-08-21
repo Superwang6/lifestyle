@@ -10,7 +10,7 @@
 					bgColor="#F0F1F2" placeholder="搜索"></uni-search-bar>
 			</template>
 			<uni-swipe-action ref="swiper">
-				<template v-for="(item,index) in list" :key="index">
+				<template v-for="(item,index) in list" :key="item.id">
 					<uni-swipe-action-item class="item-content" :right-options="options" @click="swipeClick($event, item)" :threshold="0">
 						<view :class="'item ' + (item.status == 1 ? 'success': (item.status == 3 ? 'fail' : ''))" @click="detailClick(index)">
 							<view class="title-area">

@@ -10,12 +10,12 @@
 			<uni-col :span="18">{{explain}}</uni-col>
 		</uni-row>
 		<view class="tab">
-			<template v-for="item in tabList">
+			<template v-for="item in tabList" :key="item.id">
 				<span @click="changeTab(item.id)" :class="{active: type == item.id}">{{item.name}}</span>
 			</template>
 			<uni-icons class="refresh" @click="refreshExpression" type="refreshempty"></uni-icons>
 		</view>
-		<template v-for="item in tabList">
+		<template v-for="item in tabList" :key="item.id">
 			<view class="tab-item" v-if="type == item.id">
 				<view class="mode" v-if="item.modes.includes(0)" @click="chooseMode(item.id,0)"
 					:class="{choose: chooseModesData[item.id].mode == 0}">
@@ -38,7 +38,7 @@
 				<view class="mode" v-if="item.modes.includes(3) && item.options">
 					<span>指定：</span>
 					<view class="appoint">
-						<template v-for="i in item.options">
+						<template v-for="i in item.options" :key="i">
 							<span @click="chooseMode(item.id,3, i)"
 								:class="{choose: chooseModesData[item.id].mode == 3 && chooseModesData[item.id].chooseList && chooseModesData[item.id].chooseList.includes(i)}">{{i}}</span>
 						</template>
@@ -55,12 +55,12 @@
 				<picker-view class="picker-view" @change="pickerChange">
 					<view class="picker-item-pre">x</view>
 					<picker-view-column>
-						<view class="picker-item" v-for="(item,index) in openPopTabData.options" :key="index">{{item}}
+						<view class="picker-item" v-for="item in openPopTabData.options" :key="item">{{item}}
 						</view>
 					</picker-view-column>
 					<view class="picker-item-pre">y</view>
 					<picker-view-column>
-						<view class="picker-item" v-for="(item,index) in openPopTabData.options" :key="index">{{item}}
+						<view class="picker-item" v-for="item in openPopTabData.options" :key="item">{{item}}
 						</view>
 					</picker-view-column>
 				</picker-view>

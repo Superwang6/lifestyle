@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<transition-group name="message">
-			<template v-for="(message, index) in messageList" :key="index">
+			<template v-for="message in messageList" :key="message.id">
 				<view class="message" :class="'uni-popup__' + message.msgType" @click="removeMessage(message.id)">
 					{{message.messageText}}
 				</view>

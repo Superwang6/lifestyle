@@ -1,6 +1,6 @@
 <template>
 	<uni-drawer ref="draw" :mode="mode">
-		<view class="content">
+		<ls-container class="content">
 			<view class="header">
 				<slot name="header"></slot>
 			</view>
@@ -10,7 +10,7 @@
 			<view class="bottom">
 				<slot name="bottom"></slot>
 			</view>
-		</view>
+		</ls-container>
 	</uni-drawer>
 </template>
 
@@ -40,10 +40,8 @@
 		display: flex;
 		flex-direction: column;
 		margin: 0 10px 0 10px;
-		height: 100vh;
 
 		.header {
-			padding-top: var(--status-bar-height);
 			margin: 10px 0 10px 0;
 		}
 

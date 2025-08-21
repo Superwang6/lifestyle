@@ -1,7 +1,7 @@
 <template>
 	<ls-container-nav title="功能管理">
 		<uni-list>
-			<template v-for="item in moduleList">
+			<template v-for="item in moduleList" :key="item.id">
 				<uni-list-item :title="item.name" :showSwitch="true" :disabled="disable" :switchChecked="item.checked" @switchChange="(e:any) => switchChange(e, item.id)"></uni-list-item>
 			</template>
 		</uni-list>
