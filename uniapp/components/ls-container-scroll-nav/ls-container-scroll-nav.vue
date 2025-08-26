@@ -1,7 +1,9 @@
 <template>
 	<ls-container>
 		<uni-nav-bar :left-icon="leftIcon" @clickLeft="clickLeft" :title="title" :border="border" :shadow="shadow" :right-icon="rightIcon" :right-text="rightText" @clickRight="clickRight"></uni-nav-bar>
-		<slot></slot>
+		<scroll-view class="container" scroll-y="true" :style="{height: containerHeight + 'px'}"  :show-scrollbar="false">
+			<slot></slot>
+		</scroll-view>
 	</ls-container>
 </template>
 
@@ -37,6 +39,12 @@ import { onMounted ,ref} from 'vue'
 	const back = () => {
 		uni.navigateBack()
 	}
+	const containerHeight = ref(0)
+	
+	onMounted(() => {
+		const systemInfo = uni.getSystemInfoSync()
+		containerHeight.value = systemInfo.windowHeight - 44 - systemInfo.statusBarHeight
+	})
 </script>
 
 <style lang="scss" scoped>

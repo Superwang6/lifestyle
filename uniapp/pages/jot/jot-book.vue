@@ -2,7 +2,7 @@
 	<ls-container-nav title="备忘本">
 		<view class="container">
 			<view class="left">
-				<scroll-view class="scroller" scroll-y :show-scrollbar="false">
+				<scroll-view class="scroller" scroll-y="true" :show-scrollbar="false">
 					<template v-for="(item,index) in bookList" :key="item.id">
 						<view class="left-item" @click="clickBook(item)" :class="activeBookId == item.id ? 'active' : ''">
 							{{item.name}}
@@ -243,13 +243,14 @@
 
 <style lang="scss" scoped>
 	.container {
-		margin-top: 4px;
 		flex-direction: row;
-		overflow-y: auto;
+		height: 100%;
 		
 		.left {
+			box-sizing: border-box;
 			width: 30vw;
 			border-top: 1px solid #e5e5e5;
+			height: 100%;
 			
 			.scroller {
 				height: 100%;
@@ -275,6 +276,7 @@
 		.right {
 			width: 70vw;
 			background-color: var(--light-bg-color);
+			overflow-y: auto;
 			
 			.add-classify {
 				display: block;

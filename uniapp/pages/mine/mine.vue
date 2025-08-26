@@ -74,6 +74,7 @@
 
 <style lang="scss" scoped>
 	.container {
+		
 		.header {
 			background-color: #FFFFFF;
 			display: flex;
@@ -122,6 +123,8 @@
 		}
 
 		.body {
+			flex: 1;
+			
 			.group {
 				margin-top: 20rpx;
 				background-color: var(--light-bg-color);
@@ -139,8 +142,6 @@
 					}
 				}
 			}
-
-			
 		}
 	}
 </style>

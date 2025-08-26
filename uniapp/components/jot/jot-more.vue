@@ -3,35 +3,49 @@
 		<template #header>
 			更多
 		</template>
-		<scroll-view class="filter-content" scroll-y :show-scrollbar="false">
-			<uni-forms label-position="top" :modelValue="jotRequest">
-				<uni-forms-item name="book" label="备忘本">
-					<uni-data-select v-model="jotRequest.bookId" :localdata="bookData" :clear="false" @change="changeBook"></uni-data-select>
-				</uni-forms-item>
-				<uni-forms-item name="status" label="状态">
-					<view class="flex-row">
-						<template v-for="(item, index) in statusList" :key="index">
-							<view class="button" :class="jotRequest.status == item.status ? 'active' : ''" @click="chooseStatus(item.status)">{{item.name}}</view>
-						</template>
-					</view>
-				</uni-forms-item>
-				<uni-forms-item name="time" label="时间">
-					<view class="time">
-						<view class="button" :class="jotRequest.timeType == 4 ? ' active' : ''" @click="chooseTime(4)">历史</view>
-						<view class="button" :class="jotRequest.timeType == 3 ? ' active' : ''" @click="chooseTime(3)">将来</view>
-						<view class="button" :class="jotRequest.timeType == 5 ? ' active' : ''" @click="chooseTime(5)">表达式</view>
-					</view>
-				</uni-forms-item>
-				<uni-forms-item name="classify" label="分类">
-					<view class="classify">
-						<template v-for="item in classifyList" :key="item.id">
-							<view class="button text-hidden" :class="jotRequest.classifyId == item.id ? 'active': ''" 
-								@click="chooseClassify(item.id)">{{item.name}}</view>
-						</template>
-					</view>
-				</uni-forms-item>
-			</uni-forms>
-		</scroll-view>
+		<uni-forms label-position="top" :modelValue="jotRequest">
+			<uni-forms-item name="book" label="备忘本">
+				<uni-data-select v-model="jotRequest.bookId" :localdata="bookData" :clear="false" @change="changeBook"></uni-data-select>
+			</uni-forms-item>
+			<uni-forms-item name="status" label="状态">
+				<view class="flex-row">
+					<template v-for="(item, index) in statusList" :key="index">
+						<view class="button" :class="jotRequest.status == item.status ? 'active' : ''" @click="chooseStatus(item.status)">{{item.name}}</view>
+					</template>
+				</view>
+			</uni-forms-item>
+			<uni-forms-item name="time" label="时间">
+				<view class="time">
+					<view class="button" :class="jotRequest.timeType == 4 ? ' active' : ''" @click="chooseTime(4)">历史</view>
+					<view class="button" :class="jotRequest.timeType == 3 ? ' active' : ''" @click="chooseTime(3)">将来</view>
+					<view class="button" :class="jotRequest.timeType == 5 ? ' active' : ''" @click="chooseTime(5)">表达式</view>
+				</view>
+			</uni-forms-item>
+			<uni-forms-item name="classify" label="分类">
+				<view class="classify">
+					<template v-for="item in classifyList" :key="item.id">
+						<view class="button text-hidden" :class="jotRequest.classifyId == item.id ? 'active': ''" 
+							@click="chooseClassify(item.id)">{{item.name}}</view>
+					</template>
+				</view>
+			</uni-forms-item>
+			<uni-forms-item name="classify" label="分类">
+				<view class="classify">
+					<template v-for="item in classifyList" :key="item.id">
+						<view class="button text-hidden" :class="jotRequest.classifyId == item.id ? 'active': ''" 
+							@click="chooseClassify(item.id)">{{item.name}}</view>
+					</template>
+				</view>
+			</uni-forms-item>
+			<uni-forms-item name="classify" label="分类">
+				<view class="classify">
+					<template v-for="item in classifyList" :key="item.id">
+						<view class="button text-hidden" :class="jotRequest.classifyId == item.id ? 'active': ''" 
+							@click="chooseClassify(item.id)">{{item.name}}</view>
+					</template>
+				</view>
+			</uni-forms-item>
+		</uni-forms>
 		<template #bottom>
 			<view class="btn confirm-btn" @click="confirm()">确认</view>
 		</template>
@@ -142,25 +156,24 @@
 </script>
 
 <style lang="scss" scoped>
-	.filter-content {
-		height: 100%;
-		
-		.time {
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-			overflow-y: auto;
-			max-height: 20vh;
-		}
-		.classify {
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-		}
-		.active {
-			color: #FFFFFF;
-			background-color: lightblue;
-		}
+	.button {
+		margin: 8rpx;
+	}
+	.time {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		overflow-y: auto;
+		max-height: 20vh;
+	}
+	.classify {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	.active {
+		color: #FFFFFF;
+		background-color: lightblue;
 	}
 	
 	.book {

@@ -72,17 +72,21 @@
 	"uniIdRouter": {},
 	"tabBar": {
 		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
+		"selectedColor": "#90EE90",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
 				"pagePath": "pages/workbench/workbench",
-				"text": "工作台"
+				"text": "工作台",
+				"iconPath": "/static/icon/gongzuotai.png",
+				"selectedIconPath": "/static/icon/gongzuotai_act.png"
 			},
 			{
 				"pagePath": "pages/mine/mine",
-				"text": "我的"
+				"text": "我的",
+				"iconPath": "/static/icon/wode.png",
+				"selectedIconPath": "/static/icon/wode_act.png"
 			}
 		]
 	}

@@ -8,18 +8,25 @@
 			<view class="base-info">
 				<view class="line-item">
 					<view class="line-left">账号</view>
-					<uni-easyinput class="line-right" :value="user.account" :inputBorder="false" :clearable="false" disabled
-						:styles="{disableColor: '#fff'}"></uni-easyinput>
+					<view class="line-right">
+						<uni-easyinput :value="user.account" :inputBorder="false" :clearable="false" disabled
+							:styles="{disableColor: '#fff'}"></uni-easyinput>
+					</view>
 				</view>
 				<view class="line-item" v-if="settingsStore.mobileSupport">
 					<view class="line-left">手机号</view>
-					<uni-easyinput class="line-right" :value="user.mobilePhone" :inputBorder="false" :clearable="false"
-						disabled :styles="{disableColor: '#fff'}"></uni-easyinput>
+					<view class="line-right">
+						<uni-easyinput :value="user.mobilePhone" :inputBorder="false" :clearable="false"
+							disabled :styles="{disableColor: '#fff'}"></uni-easyinput>
+					</view>
+					
 				</view>
 				<view class="line-item">
 					<view class="line-left">昵称</view>
-					<uni-easyinput class="line-right" v-model="user.name" :inputBorder="false"
-						:clearable="false"></uni-easyinput>
+					<view class="line-right">
+						<uni-easyinput v-model="user.name" :inputBorder="false"
+							:clearable="false"></uni-easyinput>
+					</view>
 				</view>
 			</view>
 			<view class="base-info">
@@ -39,8 +46,10 @@
 				</view>
 				<view class="line-item">
 					<view class="line-left">签名</view>
-					<uni-easyinput class="line-right" v-model="user.sign" :inputBorder="false" :clearable="false"
-						placeholder="请填写您的个性签名"></uni-easyinput>
+					<view class="line-right">
+						<uni-easyinput v-model="user.sign" :inputBorder="false" :clearable="false"
+							placeholder="请填写您的个性签名"></uni-easyinput>
+					</view>
 				</view>
 			</view>
 			<view class="btn save-user" @click="saveUserInfo">保存</view>

@@ -1,6 +1,8 @@
 <template>
 	<view class="ls-container" :style="{paddingTop: statusBarHeight + 'px',paddingBottom: windowButtom + 'px', height: pageHeight + 'px'}">
-		<slot></slot>
+		<view class="flex" :style="{height: childHeight +'px'}">
+			<slot></slot>
+		</view>
 	</view>
 </template>
 
@@ -11,6 +13,8 @@
 	const windowButtom = ref(0)
 	const pageHeight = ref(0)
 	
+	const childHeight = ref(0)
+	
 	onMounted(() => {
 		const systemInfo = uni.getSystemInfoSync()
 		statusBarHeight.value = systemInfo.statusBarHeight
@@ -18,6 +22,8 @@
 		windowButtom.value = systemInfo.windowBottom
 		// #endif
 		pageHeight.value = systemInfo.windowHeight
+		
+		childHeight.value = systemInfo.windowHeight - systemInfo.statusBarHeight
 	})
 </script>
 
@@ -26,5 +32,9 @@
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
+		
+		.child-container {
+			
+		}
 	}
 </style>

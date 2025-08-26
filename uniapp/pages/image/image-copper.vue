@@ -9,7 +9,6 @@
 		ref,
 		getCurrentInstance
 	} from 'vue';
-	import lsImageCropper from '@/components/ls-image-cropper/ls-image-cropper.vue'
 	import {
 		post,
 		uploadFile,

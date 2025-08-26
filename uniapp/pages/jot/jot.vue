@@ -46,7 +46,7 @@
 		</z-paging>
 		<jot-more ref="more" @filterParam="filterParam"></jot-more>
 		<uni-fab horizontal="right" vertical="bottom" :pop-menu="false" :pattern="{buttonColor: 'var(--primary-color)'}"
-			@click="addJot()"></uni-fab>
+			@fabClick="addJot"></uni-fab>
 	</ls-container-nav>
 </template>
 

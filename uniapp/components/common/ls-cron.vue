@@ -11,7 +11,7 @@
 		</uni-row>
 		<view class="tab">
 			<template v-for="item in tabList" :key="item.id">
-				<span @click="changeTab(item.id)" :class="{active: type == item.id}">{{item.name}}</span>
+				<view class="span" @click="changeTab(item.id)" :class="{active: type == item.id}">{{item.name}}</view>
 			</template>
 			<uni-icons class="refresh" @click="refreshExpression" type="refreshempty"></uni-icons>
 		</view>
@@ -36,11 +36,11 @@
 					{{chooseModesData[item.id].mode == 2 ? chooseModesData[item.id].y : 'y'}} {{item.name}}执行一次
 				</view>
 				<view class="mode" v-if="item.modes.includes(3) && item.options">
-					<span>指定：</span>
+					<view>指定：</view>
 					<view class="appoint">
 						<template v-for="i in item.options" :key="i">
-							<span @click="chooseMode(item.id,3, i)"
-								:class="{choose: chooseModesData[item.id].mode == 3 && chooseModesData[item.id].chooseList && chooseModesData[item.id].chooseList.includes(i)}">{{i}}</span>
+							<view class="span" @click="chooseMode(item.id,3, i)"
+								:class="{choose: chooseModesData[item.id].mode == 3 && chooseModesData[item.id].chooseList && chooseModesData[item.id].chooseList.includes(i)}">{{i}}</view>
 						</template>
 					</view>
 				</view>
@@ -49,10 +49,10 @@
 		<uni-popup ref="popup" type="bottom" border-radius="10px 10px 0 0" background-color="#fff">
 			<view class="popup">
 				<view class="popup-title">
-					<span @click="popupClose()">取消</span>
-					<span @click="popupConfirm()">确认</span>
+					<view @click="popupClose()">取消</view>
+					<view @click="popupConfirm()">确认</view>
 				</view>
-				<picker-view class="picker-view" @change="pickerChange">
+				<picker-view class="picker-view" @change="pickerChange" v-if="openPopTabData && openPopTabData.options">
 					<view class="picker-item-pre">x</view>
 					<picker-view-column>
 						<view class="picker-item" v-for="item in openPopTabData.options" :key="item">{{item}}
@@ -75,7 +75,8 @@
 		onBeforeMount,
 		onMounted,
 		ref,
-		watch
+		watch,
+		toRaw
 	} from 'vue';
 	import cronstrue from 'cronstrue/i18n';
 
@@ -116,10 +117,10 @@
 	}>()
 
 	const tabList = ref([{
-		'id': 1,
-		'name': '分',
-		'modes': [1, 2, 3],
-		'options': ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		id: 1,
+		name: '分',
+		modes: [1, 2, 3],
+		options: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 			"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
 			"30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
@@ -128,42 +129,43 @@
 		]
 	},
 	{
-		'id': 2,
-		'name': '时',
-		'modes': [0, 1, 2, 3],
-		'options': ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		id: 2,
+		name: '时',
+		modes: [0, 1, 2, 3],
+		options: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 			"20", "21", "22", "23"
 		]
 	},
 	{
-		'id': 3,
-		'name': '日',
-		'modes': [0, 1, 2, 3, 4],
-		'options': ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+		id: 3,
+		name: '日',
+		modes: [0, 1, 2, 3, 4],
+		options: ["1", "2", "3", "4", "5", "6", "7", "8", "9",
 			"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 			"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
 			"30", "31", "L"
 		]
 	},
 	{
-		'id': 4,
-		'name': '月',
-		'modes': [0, 1, 2, 3],
-		'options': ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+		id: 4,
+		name: '月',
+		modes: [0, 1, 2, 3],
+		options: ["1", "2", "3", "4", "5", "6", "7", "8", "9",
 			"10", "11", "12"
 		]
 	},
 	{
-		'id': 5,
-		'name': '周',
-		'modes': [0, 1, 2, 3, 4],
-		'options': ["1", "2", "3", "4", "5", "6", "7"]
+		id: 5,
+		name: '周',
+		modes: [0, 1, 2, 3, 4],
+		options: ["1", "2", "3", "4", "5", "6", "7"]
 	},
 	{
-		'id': 6,
-		'name': '年',
-		'modes': [0, 1, 2]
+		id: 6,
+		name: '年',
+		modes: [0, 1, 2],
+		options: []
 	}
 	])
 	const type = ref(1)
@@ -232,7 +234,7 @@
 	const chooseMode = (id : number, mode : number, option ?: string) => {
 		if (mode == 1 || mode == 2) {
 			openPopTabData.value = {
-				...tabList.value.find(item => item.id == id)
+				...toRaw(tabList.value.find(item => item.id == id))
 			}
 			openPopTabData.value.mode = mode
 			openPopTabData.value.x = openPopTabData.value.options[0]
@@ -280,6 +282,7 @@
 		chooseModesData.value[openPopTabData.value.id].x = openPopTabData.value.x
 		chooseModesData.value[openPopTabData.value.id].y = openPopTabData.value.y
 		popup.value.close()
+		openPopTabData.value = null
 	}
 	const popupClose = () => {
 		popup.value.close()
@@ -325,11 +328,11 @@
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			margin-bottom: 10px;
+			margin: 30rpx 0 30rpx 0;
 		}
 
 		.explain {
-			margin-bottom: 10px;
+			margin: 30rpx 0 30rpx 0;
 		}
 
 		.tab {
@@ -340,7 +343,7 @@
 			border-top-left-radius: var(--item-radius);
 			border-top-right-radius: var(--item-radius);
 
-			span {
+			.span {
 				height: 30px;
 				line-height: 30px;
 				flex: 1;
@@ -359,7 +362,7 @@
 		}
 
 		.active {
-			background-color: var(--bg-color);
+			background-color: var(--light-bg-color);
 		}
 
 		.choose {
@@ -368,7 +371,7 @@
 		}
 
 		.tab-item {
-			background-color: var(--bg-color);
+			background-color: var(--light-bg-color);
 
 			padding: 10px;
 
@@ -381,7 +384,7 @@
 					flex-wrap: wrap;
 					justify-content: start;
 
-					span {
+					.span {
 						width: 16.66%;
 						text-align: center;
 						height: 30px;

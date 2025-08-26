@@ -1,7 +1,6 @@
 <template>
-	<view class="detail">
-		<uni-nav-bar :title="title" left-icon="left" @clickLeft="back" :border="false" :fixed="true" />
-		<scroll-view class="uni-body" scroll-y :show-scrollbar="false">
+	<ls-container-scroll-nav :title="title">
+		<view class="uni-body">
 			<uni-forms label-position="top" ref="form" :model="detailItem" :rules="rules">
 				<uni-forms-item label="标题" name="title" required>
 					<uni-easyinput v-model="detailItem.title"></uni-easyinput>
@@ -16,8 +15,10 @@
 				</uni-forms-item>
 				<uni-forms-item label="提醒方式" name="remindType">
 					<view class="remind-title">
-						<span class="remind-title-left" @click="remidTypeClick(0)" :class="{active: detailItem.remindType == 0}">单次</span>
-						<span class="remind-title-right" @click="remidTypeClick(1)" :class="{active: detailItem.remindType == 1}">cron表达式</span>
+						<span class="remind-title-left" @click="remidTypeClick(0)"
+							:class="{active: detailItem.remindType == 0}">单次</span>
+						<span class="remind-title-right" @click="remidTypeClick(1)"
+							:class="{active: detailItem.remindType == 1}">cron表达式</span>
 					</view>
 					<view class="remind-body">
 						<view v-if="detailItem.remindType == 0">
@@ -25,8 +26,8 @@
 								@iconClick="openTimePicker">
 							</uni-easyinput>
 							<uni-popup ref="timePickerPopup" type="bottom" border-radius="10px 10px 0 0">
-								<l-date-time-picker format='YYYY-MM-DD HH:mm:00' title="选择时间" confirm-btn="确认" cancel-btn="取消"
-									:start="format(new Date(), 'YYYY-MM-DD HH:mm:00')"
+								<l-date-time-picker format='YYYY-MM-DD HH:mm:00' title="选择时间" confirm-btn="确认"
+									cancel-btn="取消" :start="format(new Date(), 'YYYY-MM-DD HH:mm:00')"
 									:end="format(new Date(now.setMonth(now.getMonth() + 1)), 'YYYY-MM-DD HH:mm:00')"
 									@confirm="onTimerPickerConfirm" @cancel="onTimerPickerCancel" :mode="1|2|4|8|16">
 								</l-date-time-picker>
@@ -41,9 +42,9 @@
 					<uni-easyinput placeholder="不填表示无限次" v-model="detailItem.triggerTimes"></uni-easyinput>
 				</uni-forms-item>
 			</uni-forms>
-		</scroll-view>
-		<view class="btn-submit btn" @click="submit">保存</view>
-	</view>
+			<view class="btn-submit btn" @click="submit">保存</view>
+		</view>
+	</ls-container-scroll-nav>
 </template>
 
 <script setup>
@@ -53,7 +54,8 @@
 	import {
 		onMounted,
 		ref,
-		getCurrentInstance
+		getCurrentInstance,
+		nextTick
 	} from 'vue'
 	import {
 		post
@@ -62,7 +64,7 @@
 		format
 	} from '@/utils/time'
 	import lsCron from '@/components/common/ls-cron.vue'
-	
+
 	const now = new Date()
 	const title = ref('新增')
 	const mode = ref(0)
@@ -86,7 +88,8 @@
 		detailItem.value.remindType = remindType
 	}
 	const pickerData = ref([
-		['a','b'],['c','d']
+		['a', 'b'],
+		['c', 'd']
 	])
 	const index = ref(0)
 	const timePickerPopup = ref(null)
@@ -126,7 +129,7 @@
 					'status': detailItem.value.status,
 					'remindType': detailItem.value.remindType,
 				}
-				if(detailItem.value.remindType == 0) {
+				if (detailItem.value.remindType == 0) {
 					request['remindTime'] = detailItem.value.remindTime
 				} else {
 					request['cronExpression'] = detailItem.value.cronExpression
@@ -153,11 +156,11 @@
 					'status': detailItem.value.status,
 					'remindType': detailItem.value.remindType,
 				}
-				if(detailItem.value.remindType == 0) {
+				if (detailItem.value.remindType == 0) {
 					request['remindTime'] = detailItem.value.remindTime
 				} else {
 					request['cronExpression'] = detailItem.value.cronExpression
-					if(detailItem.value.triggerTimes) {
+					if (detailItem.value.triggerTimes) {
 						request['triggerTimes'] = detailItem.value.triggerTimes
 					} else {
 						request['triggerTimes'] = -1
@@ -175,12 +178,13 @@
 			})
 		}
 	}
+
 	onMounted(() => {
 		queryJotClassify()
 	})
 	onLoad((option) => {
-		 const instance = getCurrentInstance().proxy
-		    const eventChannel = instance.getOpenerEventChannel();
+		const instance = getCurrentInstance().proxy
+		const eventChannel = instance.getOpenerEventChannel();
 		mode.value = option.mode
 		if (option.mode == 0) {
 			title.value = "新增"
@@ -193,7 +197,7 @@
 				detailItem.value.cronExpression = remindTimeObj.cron
 				detailItem.value.triggerTimes = remindTimeObj.triggerTimes
 			})
-			if(detailItem.value.triggerTimes == -1) {
+			if (detailItem.value.triggerTimes == -1) {
 				detailItem.value.triggerTimes = null
 			}
 		}
@@ -201,51 +205,44 @@
 </script>
 
 <style lang="scss" scoped>
-	.detail {
-		height: 100%;
+	.uni-body {
+		padding: 20rpx;
 		display: flex;
 		flex-direction: column;
-		margin: 0 10px 0 10px;
+		overflow: hidden;
 
-		.uni-body {
-			flex: 1;
-			height: 0vh;
+		.remind-title {
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
+			margin-bottom: 5px;
 
-			.remind-title {
-				display: flex;
-				flex-direction: row;
-				margin-bottom: 5px;
-				
-				.remind-title-left {
-					flex: 1;
-					height: 30px;
-					line-height: 30px;
-					text-align: center;
-					border-top-left-radius: var(--button-radius);
-					border-bottom-left-radius: var(--button-radius);
-					background-color: #F5F5F5;
-				}
-				.remind-title-right {
-					flex: 1;
-					height: 30px;
-					line-height: 30px;
-					text-align: center;
-					border-top-right-radius: var(--button-radius);
-					border-bottom-right-radius: var(--button-radius);
-					background-color: #F5F5F5;
-				}
+			.remind-title-left {
+				flex: 1;
+				height: 30px;
+				line-height: 30px;
+				text-align: center;
+				border-top-left-radius: var(--button-radius);
+				border-bottom-left-radius: var(--button-radius);
+				background-color: var(--light-bg-color);
 			}
-			.remind-body {
-				
+
+			.remind-title-right {
+				flex: 1;
+				height: 30px;
+				line-height: 30px;
+				text-align: center;
+				border-top-right-radius: var(--button-radius);
+				border-bottom-right-radius: var(--button-radius);
+				background-color: var(--light-bg-color);
 			}
 		}
-		.btn-submit {
-			margin: 10px 0 10px 0;
-		}
+		
 		.active {
 			background-color: var(--primary-color) !important;
 		}
+	}
+
+	.btn-submit {
+		margin: 10px 0 10px 0;
 	}
 </style>

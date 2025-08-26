@@ -15,14 +15,10 @@ app.$mount()
 // #ifdef VUE3
 import { createSSRApp } from 'vue'
 import * as Pinia from 'pinia';
-import lsContainer from './components/common/ls-container.vue'
-import lsContainerNav from './components/common/ls-container-nav.vue'
 
 export function createApp() {
   const app = createSSRApp(App)
   app.use(Pinia.createPinia())
-  app.component('ls-container', lsContainer)
-  app.component('ls-container-nav', lsContainerNav)
   return {
     app,
 	Pinia

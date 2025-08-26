@@ -1,12 +1,12 @@
 <template>
 	<uni-drawer ref="draw" :mode="mode">
-		<ls-container class="content">
+		<ls-container ref="conRef" class="content">
 			<view class="header">
 				<slot name="header"></slot>
 			</view>
-			<view class="body">
+			<scroll-view class="body" scroll-y :show-scrollbar="false">
 				<slot></slot>
-			</view>
+			</scroll-view>
 			<view class="bottom">
 				<slot name="bottom"></slot>
 			</view>
@@ -16,19 +16,24 @@
 
 <script setup lang="ts">
 	import {
+		onMounted,
 		ref
 	} from 'vue'
+	
 	const props = defineProps<{
 		mode?: string
 	}>()
 
 	const draw = ref(null)
+	const conRef = ref(null)
+	
 	const open = () => {
 		draw.value.open()
 	}
-	const close = () => [
+	const close = () => {
 		draw.value.close()
-	]
+	}
+	
 	defineExpose({
 		open,
 		close
@@ -43,15 +48,17 @@
 
 		.header {
 			margin: 10px 0 10px 0;
+			max-height: 5%;
 		}
 
 		.body {
 			flex: 1;
-			overflow: hidden;
+			height: 85%;
 		}
 
 		.bottom {
 			margin: 10px 0 10px 0;
+			max-height: 10%;
 		}
 	}
 </style>
